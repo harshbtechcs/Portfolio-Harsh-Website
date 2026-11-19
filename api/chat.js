@@ -50,7 +50,7 @@ async function callGemini(model, key, contents, withThinking) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({ systemInstruction: { parts: [{ text: SYSTEM }] }, contents, generationConfig }),
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(8000),
     }
   );
   const data = await res.json().catch(() => ({}));
@@ -83,7 +83,8 @@ module.exports = async (req, res) => {
   }
 
   // Try the configured model first, then fall back through stable aliases if a name isn't available.
-  const models = [...new Set([process.env.GEMINI_MODEL, 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash'].filter(Boolean))];
+  // Lite first: lighter load on Google's side, plenty for portfolio Q&A, and the most generous free limits.
+  const models = [...new Set([process.env.GEMINI_MODEL, 'gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-2.5-flash'].filter(Boolean))];
   try {
     let r = null;
     for (const model of models) {
@@ -91,8 +92,9 @@ module.exports = async (req, res) => {
       if (r.status === 400 && !isKeyProblem(r.data)) r = await callGemini(model, key, contents, false); // no thinkingConfig
       if (r.status === 404) { console.error('gemini model not found:', model); continue; }
       if (r.status === 200) break;
-      if (r.status !== 429) break; // key/permission problems won't be fixed by another model
-      console.error('gemini quota reached on', model);
+      // Busy/overloaded (503, 500, 504) or out of quota (429): another model usually still works.
+      if (![429, 500, 503, 504].includes(r.status)) break; // key/permission problems won't be fixed by another model
+      console.error('gemini', r.status, 'on', model, '- trying next model');
     }
     if (r.status !== 200) {
       const reason = ((r.data || {}).error || {}).status || '';
