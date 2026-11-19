@@ -1,7 +1,7 @@
 {
   "name": "portfolio-harsh-website",
   "private": true,
-  "description": "Harsh Yadav: AWS Cloud & DevOps Engineer portfolio (harsh.generatelogic.in)",
+  "description": "Harsh Yadav: AWS Cloud & DevOps Engineer portfolio (harshportfolio.generatelogic.in)",
   "engines": {
     "node": ">=20"
   },

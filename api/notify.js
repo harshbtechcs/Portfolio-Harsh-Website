@@ -6,7 +6,7 @@
 //   GMAIL_APP_PASSWORD  16-character Google App Password (not your normal password)
 //   NOTIFY_TO           where alerts go (optional, defaults to GMAIL_USER)
 //   AUTO_REPLY          "off" to stop thank-you emails to visitors (optional, default on)
-//   SITE_URL            portfolio address used in the thank-you email (default https://harsh.generatelogic.in)
+//   SITE_URL            portfolio address used in the thank-you email (default https://harshportfolio.generatelogic.in)
 
 const nodemailer = require('nodemailer');
 
@@ -139,7 +139,7 @@ const PURPOSE_LINE = {
 };
 
 function thankYou(kind, purpose, firstName) {
-  const site = process.env.SITE_URL || 'https://harsh.generatelogic.in';
+  const site = process.env.SITE_URL || 'https://harshportfolio.generatelogic.in';
   const linkedin = 'https://www.linkedin.com/in/harshyadav579';
   const hi = firstName ? `Hi ${firstName},` : 'Hi there,';
   const lines = kind === 'contact'

@@ -1,6 +1,6 @@
 # Harsh Yadav · Portfolio
 
-Personal portfolio of **Harsh Yadav, AWS Cloud & DevOps Engineer** · live at **https://harsh.generatelogic.in**
+Personal portfolio of **Harsh Yadav, AWS Cloud & DevOps Engineer** · live at **https://harshportfolio.generatelogic.in**
 
 - Immersive 3D background (Three.js): cloud network, per-skill environments, globe
 - Sections: About, Skills, Experience, Projects, Certifications, Education, Blog, Contact
@@ -24,9 +24,9 @@ robots.txt, sitemap.xml
    | `GMAIL_APP_PASSWORD` | 16-char Google App Password (myaccount.google.com → Security → 2-Step Verification → App passwords) |
    | `NOTIFY_TO` | optional, where alerts go (defaults to `GMAIL_USER`) |
    | `AUTO_REPLY` | optional, `off` stops the thank-you email to visitors (default on) |
-   | `SITE_URL` | optional, portfolio link used in the thank-you email (default `https://harsh.generatelogic.in`) |
+   | `SITE_URL` | optional, portfolio link used in the thank-you email (default `https://harshportfolio.generatelogic.in`) |
    Then **Deployments → ⋯ → Redeploy** so the function picks them up.
-3. **Settings → Domains** → add `harsh.generatelogic.in` → add the CNAME record Vercel shows at your DNS provider. SSL is issued automatically.
+3. **Settings → Domains** → add `harshportfolio.generatelogic.in` → add the CNAME record Vercel shows at your DNS provider. SSL is issued automatically.
 
 ## Editing content
 All content lives in the `CONTENT` block near the top of the `<script>` in `index.html`:
