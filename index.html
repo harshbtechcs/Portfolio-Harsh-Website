@@ -1810,7 +1810,7 @@ function loop(now){
 
 /* ---------- intro ---------- */
 function finishIntro(){if(st.introDone)return;st.introDone=true;document.body.classList.remove('intro');$('#intro').classList.add('gone');
- setTimeout(()=>$('#intro').remove(),1000);document.querySelector('.hero').classList.add('revealed');typeRole();setTimeout(()=>{const a=$('#avatar');a&&a.hello&&a.hello('Hi, welcome! 👋');if(st.viaGate)VOICE.welcome();},2600);}
+ setTimeout(()=>$('#intro').remove(),1000);document.querySelector('.hero').classList.add('revealed');typeRole();setTimeout(()=>{const a=$('#avatar');a&&a.hello&&a.hello('Welcome! 👋');if(st.viaGate)VOICE.welcome();},2600);}
 function typeRole(){const el=$('#typed'),txt='AWS CLOUD & DEVOPS ENGINEER';if(calm()){el.textContent=txt;return;}let i=0;
  setTimeout(function f(){el.textContent=txt.slice(0,++i);if(i<txt.length)setTimeout(f,38);},500);}
 function startIntro(){
@@ -2028,7 +2028,7 @@ const VOICE=(()=>{
  // One spoken line, only for a visitor who has just entered through the email gate
  // (that click is what lets the browser play speech).
  function welcome(){if(!ok)return;try{speechSynthesis.cancel();
-   const u=new SpeechSynthesisUtterance("Hi, welcome to Harsh's portfolio!");if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-IN';u.rate=1;u.pitch=1.15;
+   const u=new SpeechSynthesisUtterance("Welcome!");if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-IN';u.rate=1;u.pitch=1.15;
    const bot=$('#bot');u.onstart=()=>bot&&bot.classList.add('talking');u.onend=u.onerror=()=>bot&&bot.classList.remove('talking');
    speechSynthesis.speak(u);}catch(e){}}
  return {welcome};
