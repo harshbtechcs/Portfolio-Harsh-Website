@@ -1994,7 +1994,7 @@ const CB=(()=>{
    const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||String(r.status));
    history.push({role:'model',text:d.text});history=history.slice(-10);
    ty.remove();addMsg(fmt(d.text),'from-bot',local.fallback?null:local.acts);
-  }catch(e){ty.remove();history.pop();if(/not configured/.test(e.message))aiOff=true;else aiPauseUntil=Date.now()+10*60*1000;addMsg(local.t,'from-bot',local.acts);}
+  }catch(e){ty.remove();history.pop();if(/not configured/.test(e.message))aiOff=true;else aiPauseUntil=Date.now()+(/quota/.test(e.message)?10:2)*60*1000;addMsg(local.t,'from-bot',local.acts);}
   finally{pending=false;}}
  function open(){if(opened)return;opened=true;panel.hidden=false;panel.classList.remove('closing');$('#cbLaunch').setAttribute('aria-expanded','true');$('#cbBadge').hidden=true;
   if(!greeted){greeted=true;botSay({t:"Hi! 👋 I'm Harsh's DevOps bot.\nAsk me about his skills, experience, projects, certifications, or how to hire him."});}
