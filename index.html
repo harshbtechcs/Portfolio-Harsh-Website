@@ -698,6 +698,141 @@ body.calm .av-scan{display:none}
 .bot.talking .b-eq rect{animation-duration:.25s!important}
 .bot.talking .b-ant-glow{animation-duration:.5s}
 
+/* ================= CI/CD PIPELINE PROGRESS ================= */
+#progress{display:none}
+.pipe{position:fixed;left:22px;bottom:22px;z-index:57;padding:12px 16px 10px;border-radius:16px;border:1px solid var(--line2);
+  background:linear-gradient(160deg,rgba(14,28,62,.82),rgba(4,8,20,.86));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 14px 40px -14px rgba(0,0,0,.8);transition:opacity .6s,transform .6s var(--ease),border-color .4s,box-shadow .4s}
+body.intro .pipe{opacity:0;transform:translateY(20px);pointer-events:none}
+.pipe-stages{display:flex;align-items:center;gap:6px}
+.pst{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:48px}
+.pst i{position:relative;width:22px;height:22px;border-radius:50%;border:2px solid rgba(120,200,255,.25);background:rgba(3,6,14,.8);display:grid;place-items:center;transition:.35s var(--ease)}
+.pst b{font:600 10.5px var(--head);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:color .3s}
+.pst.run i{border-color:var(--cyan);border-top-color:transparent;animation:spin 0.9s linear infinite;box-shadow:0 0 12px rgba(34,228,255,.5)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pst.run b{color:#bfe9ff}
+.pst.ok i{border-color:#28c840;background:#28c840;box-shadow:0 0 14px rgba(40,200,64,.6);animation:okpop .4s var(--ease)}
+.pst.ok i:after{content:"";width:6px;height:10px;border:solid #04140a;border-width:0 2.5px 2.5px 0;transform:translate(0,-1px) rotate(45deg)}
+.pst.ok b{color:#7ff0a0}
+@keyframes okpop{0%{transform:scale(.6)}60%{transform:scale(1.25)}100%{transform:none}}
+.pline{width:34px;height:2px;border-radius:2px;background:rgba(120,200,255,.18);margin-bottom:18px;overflow:hidden}
+.pline em{display:block;height:100%;width:0;background:linear-gradient(90deg,#28c840,#7ff0a0);transition:width .25s linear}
+.pipe-log{font:11px var(--mono);color:var(--muted);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
+.pipe.done{border-color:rgba(40,200,64,.55);box-shadow:0 0 0 1px rgba(40,200,64,.25),0 14px 40px -10px rgba(40,200,64,.45)}
+.pipe.done .pipe-log{color:#7ff0a0}
+@media (max-width:620px){.pipe{left:12px;bottom:14px;padding:10px 12px 8px}.pst{min-width:0}.pst b{display:none}.pline{width:16px;margin-bottom:0}.pst{gap:0}.pipe-log{max-width:170px;font-size:10px}}
+
+/* ================= EXPLORATION XP ================= */
+.xp{position:fixed;top:18px;right:18px;z-index:41;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(6,12,28,.7);border:1px solid var(--line2);backdrop-filter:blur(12px);transition:opacity .6s,transform .4s var(--ease)}
+body.intro .xp{opacity:0;pointer-events:none}
+.xp svg{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);transform:rotate(-90deg)}
+.xp circle{fill:none;stroke-width:3.5}
+.xp-bg{stroke:rgba(120,200,255,.15)}
+.xp-fg{stroke:url(#gcy);stroke:#22e4ff;stroke-linecap:round;stroke-dasharray:119.4;stroke-dashoffset:119.4;transition:stroke-dashoffset .8s var(--ease);filter:drop-shadow(0 0 4px rgba(34,228,255,.7))}
+.xp-n{font:700 12px var(--head);color:#fff}
+.xp.bump{animation:okpop .45s var(--ease)}
+.xp.full{border-color:#ffd166;box-shadow:0 0 22px -2px rgba(255,209,102,.7)}
+.xp.full .xp-fg{stroke:#ffd166;filter:drop-shadow(0 0 5px rgba(255,209,102,.9))}
+.xp-tip{position:absolute;top:60px;right:0;width:230px;padding:12px 14px;border-radius:14px;text-align:left;font:12.5px/1.7 var(--body);color:#cfe0f7;
+  background:rgba(6,14,32,.94);border:1px solid var(--line2);opacity:0;transform:translateY(-6px);pointer-events:none;transition:.25s var(--ease)}
+.xp:hover .xp-tip,.xp:focus-visible .xp-tip,.xp.show .xp-tip{opacity:1;transform:none}
+.xp-tip b{display:block;font:700 13px var(--head);color:#fff;margin-bottom:4px}
+.xp-tip .y{color:#7ff0a0}.xp-tip .n{color:var(--dim)}
+@media (max-width:1120px){.xp{top:16px;right:12px;width:48px;height:48px}}
+.achv{position:fixed;left:50%;top:90px;z-index:70;transform:translate(-50%,-30px) scale(.9);opacity:0;pointer-events:none;display:flex;align-items:center;gap:14px;
+  padding:14px 22px;border-radius:18px;background:linear-gradient(135deg,rgba(60,40,0,.92),rgba(20,14,2,.94));border:1px solid rgba(255,209,102,.6);
+  box-shadow:0 0 40px -6px rgba(255,209,102,.6);transition:.5s cubic-bezier(.34,1.56,.64,1)}
+.achv.show{opacity:1;transform:translate(-50%,0) scale(1)}
+.achv .ic{font-size:32px}
+.achv small{display:block;font:600 11px var(--head);letter-spacing:.2em;color:#ffd166;text-transform:uppercase}
+.achv b{font:700 18px var(--head);color:#fff}
+.confetti{position:fixed;inset:0;z-index:72;pointer-events:none;width:100%;height:100%}
+
+/* ================= INCIDENT MODE ================= */
+.incident{position:fixed;inset:0;z-index:66;pointer-events:none}
+.incident[hidden]{display:none}
+.incident:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(255,30,60,.18),rgba(120,0,20,.55) 80%);animation:alarm 1.1s ease-in-out infinite;transition:background .8s}
+@keyframes alarm{50%{opacity:.45}}
+.incident.ok:before{background:radial-gradient(ellipse at 50% 40%,rgba(40,200,64,.16),rgba(0,60,20,.35) 80%);animation:none}
+body.inc main{filter:saturate(.4) hue-rotate(-40deg)}
+body.inc .hero h1.name .row.b{animation:glitch .9s infinite}
+.inc-card{position:absolute;left:50%;top:110px;transform:translateX(-50%);width:min(520px,calc(100vw - 24px));padding:18px 20px;border-radius:18px;pointer-events:auto;
+  background:rgba(30,4,10,.92);border:1px solid rgba(255,80,110,.65);box-shadow:0 0 50px -6px rgba(255,40,80,.6);animation:incIn .5s cubic-bezier(.34,1.56,.64,1);font:13px var(--mono);color:#ffd6de;transition:background .6s,border-color .6s,box-shadow .6s}
+@keyframes incIn{from{opacity:0;transform:translate(-50%,-30px) scale(.9)}to{opacity:1;transform:translateX(-50%)}}
+.incident.ok .inc-card{background:rgba(4,30,12,.92);border-color:rgba(40,200,64,.7);box-shadow:0 0 50px -6px rgba(40,200,64,.6);color:#d6ffe0}
+.inc-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.inc-top b{font:700 15px var(--head);color:#fff}
+.inc-badge{padding:3px 8px;border-radius:6px;background:#ff3355;color:#fff;font:700 11px var(--head);animation:blink 1s steps(1) infinite}
+.incident.ok .inc-badge{background:#28c840;animation:none}
+.inc-metrics{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:10px;font-size:12px;color:#ffb3c1}
+.incident.ok .inc-metrics{color:#a9f0bb}
+.inc-metrics .bad{color:#ff5c7a}.incident.ok .inc-metrics .bad{color:#7ff0a0}
+.inc-log{min-height:84px;white-space:pre-line;line-height:1.7}
+.inc-bar{height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:10px}
+.inc-bar em{display:block;height:100%;width:0;background:linear-gradient(90deg,#22e4ff,#28c840);transition:width .5s linear}
+.inc-bot{position:absolute;width:70px;height:70px;right:-90px;bottom:-90px;filter:drop-shadow(0 0 16px rgba(34,228,255,.7))}
+.inc-bot svg{width:100%;height:100%}
+.inc-bot.fly{transition:all 1.4s cubic-bezier(.5,0,.2,1)}
+footer{padding-bottom:130px}
+/* nothing may widen the page on phones (decor rings, bubbles) */
+html{overflow-x:hidden}body{overflow-x:clip}
+@media (max-width:620px){.av-bubble{left:auto;right:2%;max-width:72%;white-space:normal;text-align:left;border-radius:16px 16px 4px 16px;transform-origin:100% 100%}}
+footer .egg{opacity:.55}footer kbd{font:11px var(--mono);padding:1px 6px;border-radius:4px;border:1px solid var(--line2);color:var(--cyan)}
+
+/* ================= PLAYGROUND (VPC builder) ================= */
+#playground code{font:14px var(--mono);color:#7ff0d6;background:rgba(34,228,255,.08);padding:1px 6px;border-radius:6px}
+.pg{display:grid;grid-template-columns:200px 1fr 270px;gap:18px;padding:20px!important}
+.pg-pal{display:flex;flex-direction:column;gap:10px}
+.pg-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;text-align:left;border:1px solid var(--line2);background:rgba(8,18,40,.75);
+  cursor:grab;touch-action:none;user-select:none;transition:.25s var(--ease)}
+.pg-item svg{width:30px;height:30px;color:var(--cyan);flex:none}
+.pg-item b{display:block;font:700 15px var(--head)}.pg-item small{font:12px var(--body);color:var(--muted)}
+.pg-item:hover,.pg-item.sel{border-color:var(--cyan);background:rgba(34,228,255,.12);box-shadow:0 0 20px -6px var(--cyan)}
+.pg-item.sel{transform:scale(1.03)}
+.pg-item.used{opacity:.3;pointer-events:none;filter:grayscale(1)}
+.pg-ghost{position:fixed;z-index:80;pointer-events:none;transform:translate(-50%,-50%) rotate(-4deg) scale(1.05);opacity:.95;box-shadow:0 20px 40px -10px rgba(0,0,0,.7)}
+.pg-board{position:relative;padding:14px;border-radius:16px;background:rgba(2,5,14,.55);border:1px solid var(--line);min-height:380px;display:flex;flex-direction:column;gap:14px}
+.pg-wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:2}
+.pg-net{align-self:center;padding:8px 16px;border-radius:999px;font:600 13px var(--head);color:#cfe0f7;border:1px dashed var(--line2);background:rgba(8,18,40,.6)}
+.pg-lbl{display:block;font:600 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.pg-region{flex:1;border:1px dashed rgba(255,170,60,.45);border-radius:14px;padding:12px;display:grid;grid-template-columns:1fr 150px;gap:12px}
+.pg-region>.pg-lbl{grid-column:1/-1;margin:0;color:#ffb35c}
+.pg-vpc{border:1.5px solid rgba(47,123,255,.6);border-radius:12px;padding:12px;display:grid;gap:10px;background:rgba(47,123,255,.04)}
+.pg-vpc>.pg-lbl{color:#7fb0ff}
+.pg-sub{border-radius:10px;padding:10px;border:1px dashed rgba(34,228,255,.35);background:rgba(34,228,255,.03)}
+.pg-sub.pub{border-color:rgba(127,240,160,.5);background:rgba(127,240,160,.04)}
+.pg-sub.pub>.pg-lbl{color:#7ff0a0}
+.pg-sub.outside{align-self:start;border-color:rgba(255,179,92,.5);background:rgba(255,179,92,.04)}
+.pg-sub.outside>.pg-lbl{color:#ffb35c}
+.pg-slot{width:100%;min-height:54px;border-radius:10px;border:1.5px dashed rgba(120,200,255,.3);display:flex;align-items:center;justify-content:center;gap:10px;
+  font:12px var(--body);color:var(--dim);transition:.25s var(--ease);position:relative;z-index:3}
+.pg-slot.hot{border-color:var(--cyan);background:rgba(34,228,255,.1);color:#fff;transform:scale(1.02)}
+.pg-slot.bad{animation:shake .45s;border-color:#ff5c7a;background:rgba(255,92,122,.12)}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.pg-slot.filled{border-style:solid;border-color:rgba(34,228,255,.6);background:rgba(10,24,54,.9);color:#fff}
+.pg-slot.filled svg{width:24px;height:24px;color:var(--cyan)}
+.pg-slot.filled b{font:700 14px var(--head)}
+.pg-slot.live{border-color:#28c840;box-shadow:0 0 18px -4px rgba(40,200,64,.8);animation:okpop .45s var(--ease)}
+.pg-slot.live svg{color:#7ff0a0}
+.pg-side{display:flex;flex-direction:column;gap:12px}
+.pg-term{flex:1;min-height:200px;padding:12px 14px;border-radius:14px;background:#030814;border:1px solid var(--line);font:12px/1.7 var(--mono);color:#9fb0cc;overflow:hidden}
+.pg-log div{white-space:pre-wrap;animation:pop .3s var(--ease) both}
+.pg-log .c{color:#7ff0d6}.pg-log .g{color:#7ff0a0}.pg-log .w{color:#ffb35c}.pg-log .e{color:#ff8ea5}
+.pg-status{font:600 13px var(--head);color:var(--muted)}
+.pg-status.ready{color:#7ff0a0}
+.pg-btns{display:flex;gap:10px;flex-wrap:wrap}
+.pg-btns .btn{padding:12px 18px}
+.btn[disabled]{opacity:.45;pointer-events:none;filter:grayscale(.6)}
+.pg-win{position:absolute;left:50%;top:50%;z-index:5;display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:16px;background:rgba(4,30,12,.94);
+  border:1px solid rgba(40,200,64,.7);box-shadow:0 0 40px -6px rgba(40,200,64,.7);transform:translate(-50%,-50%) scale(.6);opacity:0;pointer-events:none;transition:.5s cubic-bezier(.34,1.56,.64,1)}
+.pg-win.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.pg-win svg{width:46px;height:46px}.pg-win b{font:700 16px var(--head);color:#fff;white-space:nowrap}
+.pg-wire{fill:none;stroke:rgba(127,240,160,.6);stroke-width:2;stroke-dasharray:6 6;animation:dash 1s linear infinite}
+.pg-pkt{fill:#7ff0d6;filter:drop-shadow(0 0 5px #7ff0d6)}
+@media (max-width:1100px){.pg{grid-template-columns:1fr}.pg-pal{flex-direction:row;flex-wrap:wrap}.pg-item{flex:1 1 140px}.pg-term{min-height:150px}}
+@media (max-width:620px){.pg-region{grid-template-columns:1fr}.pg-item{flex:1 1 45%;padding:10px}.pg-item small{display:none}}
+
 /* ---------- reduced motion ---------- */
 body.calm *,body.calm *:before,body.calm *:after{animation-duration:.001s!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.001s!important;transition-delay:0s!important}
 body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .hero .fade,body.calm h1 .ch,body.calm .chip{clip-path:none!important;opacity:1!important;transform:none!important;filter:none!important}
@@ -710,7 +845,30 @@ body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .
 <div class="vignette" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="spot" id="spot" aria-hidden="true"></div>
-<div id="progress" aria-hidden="true"></div>
+<div class="pipe" id="pipe" role="status" aria-label="Page progress as a CI/CD pipeline">
+  <div class="pipe-stages">
+    <span class="pst" data-i="0"><i></i><b>Build</b></span><span class="pline"><em></em></span>
+    <span class="pst" data-i="1"><i></i><b>Test</b></span><span class="pline"><em></em></span>
+    <span class="pst" data-i="2"><i></i><b>Deploy</b></span><span class="pline"><em></em></span>
+    <span class="pst" data-i="3"><i></i><b>Monitor</b></span>
+  </div>
+  <div class="pipe-log" id="pipeLog">pipeline #142 · queued</div>
+</div>
+<button class="xp" id="xp" type="button" aria-label="Sections explored">
+  <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="19" class="xp-bg"/><circle cx="22" cy="22" r="19" class="xp-fg" id="xpRing"/></svg>
+  <span class="xp-n" id="xpN">0/0</span>
+  <span class="xp-tip" id="xpTip"></span>
+</button>
+<div class="incident" id="incident" aria-live="assertive" hidden>
+  <div class="inc-card">
+    <div class="inc-top"><span class="inc-badge">P1</span><b id="incTitle">INCIDENT #4012 · Production down</b></div>
+    <div class="inc-metrics"><span>api-gateway <b class="bad">5xx ↑</b></span><span>error rate <b class="bad" id="incErr">0%</b></span><span>p99 latency <b class="bad" id="incLat">0 ms</b></span></div>
+    <div class="inc-log" id="incLog"></div>
+    <div class="inc-bar"><em id="incBar"></em></div>
+  </div>
+  <div class="inc-bot" id="incBot"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="12" width="48" height="38" rx="18" fill="#eef3fa"/><rect x="14" y="18" width="36" height="26" rx="12" fill="#06102a"/><rect x="22" y="24" width="6" height="12" rx="3" fill="#5ff3ff"/><rect x="36" y="24" width="6" height="12" rx="3" fill="#5ff3ff"/><line x1="32" y1="12" x2="32" y2="5" stroke="#9eabc0" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="5" r="3.5" fill="#22e4ff"/><path d="M26 54 L32 64 L38 54Z" fill="#22e4ff"/></svg></div>
+</div>
+<canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
 
 <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-h" hidden>
   <form class="gate-card glass glow" id="gateForm" novalidate>
@@ -965,10 +1123,40 @@ body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .
     <div class="proj-grid" id="projGrid"></div>
   </section>
 
+  <!-- PLAYGROUND -->
+  <section id="playground" aria-labelledby="pg-h">
+    <div class="sec-head reveal">
+      <div class="idx">05 / Playground</div>
+      <h2 id="pg-h">Build your own <em>VPC</em>.</h2>
+      <p>Drag each AWS service to where it belongs in a classic three-tier setup, then run <code>terraform apply</code>. On a phone, tap a service, then tap its spot.</p>
+    </div>
+    <div class="pg glass glow reveal" id="pg">
+      <div class="pg-pal" id="pgPal" role="group" aria-label="AWS services to place"><button class="pg-item" type="button" data-k="alb" aria-label="Load Balancer (ALB)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M6 12h4M14 12h4M12 6v4M12 14v4"/></svg><span><b>ALB</b><small>Load Balancer</small></span></button><button class="pg-item" type="button" data-k="ec2" aria-label="App Server (EC2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg><span><b>EC2</b><small>App Server</small></span></button><button class="pg-item" type="button" data-k="rds" aria-label="Database (RDS)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg><span><b>RDS</b><small>Database</small></span></button><button class="pg-item" type="button" data-k="s3" aria-label="Object Storage (S3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l8-4 8 4-8 4-8-4z"/><path d="M4 7v10l8 4 8-4V7"/></svg><span><b>S3</b><small>Object Storage</small></span></button></div>
+      <div class="pg-board" id="pgBoard">
+        <svg class="pg-wires" id="pgWires" aria-hidden="true"></svg>
+        <div class="pg-net" data-node="net">🌐 Internet</div>
+        <div class="pg-region"><span class="pg-lbl">AWS Region · ap-south-1</span>
+          <div class="pg-vpc"><span class="pg-lbl">VPC · 10.0.0.0/16</span>
+            <div class="pg-sub pub"><span class="pg-lbl">Public subnet</span><button class="pg-slot" type="button" data-accept="alb" aria-label="Public subnet slot"><span>Drop a service</span></button></div>
+            <div class="pg-sub"><span class="pg-lbl">Private subnet · app</span><button class="pg-slot" type="button" data-accept="ec2" aria-label="Private app subnet slot"><span>Drop a service</span></button></div>
+            <div class="pg-sub"><span class="pg-lbl">Private subnet · data</span><button class="pg-slot" type="button" data-accept="rds" aria-label="Private data subnet slot"><span>Drop a service</span></button></div>
+          </div>
+          <div class="pg-sub outside"><span class="pg-lbl">Regional services</span><button class="pg-slot" type="button" data-accept="s3" aria-label="Regional services slot"><span>Drop a service</span></button></div>
+        </div>
+        <div class="pg-win" id="pgWin" aria-live="polite"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="12" width="48" height="38" rx="18" fill="#eef3fa"/><rect x="14" y="18" width="36" height="26" rx="12" fill="#06102a"/><path d="M20 32 Q25 24 30 32M34 32 Q39 24 44 32" stroke="#5ff3ff" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg><b>Infrastructure provisioned!</b></div>
+      </div>
+      <div class="pg-side">
+        <div class="pg-term"><div class="av-dots"><i></i><i></i><i></i></div><div class="pg-log" id="pgLog" aria-live="polite"></div></div>
+        <div class="pg-status" id="pgStatus">0 / 4 resources placed</div>
+        <div class="pg-btns"><button class="btn primary" id="pgDeploy" type="button" disabled>🚀 terraform apply</button><button class="btn" id="pgReset" type="button">Reset</button></div>
+      </div>
+    </div>
+  </section>
+
   <!-- CERTIFICATIONS -->
   <section id="certifications" aria-labelledby="cert-h">
     <div class="sec-head reveal">
-      <div class="idx">05 / Certifications</div>
+      <div class="idx">06 / Certifications</div>
       <h2 id="cert-h">Achievement <em>gallery</em>.</h2>
     </div>
     <div class="cert-grid" id="certGrid"></div>
@@ -977,7 +1165,7 @@ body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .
   <!-- EDUCATION -->
   <section id="education" aria-labelledby="edu-h">
     <div class="sec-head reveal">
-      <div class="idx">06 / Education</div>
+      <div class="idx">07 / Education</div>
       <h2 id="edu-h">Academic <em>foundation</em>.</h2>
     </div>
     <div class="edu">
@@ -1004,7 +1192,7 @@ body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .
   <!-- BLOG -->
   <section id="blog" aria-labelledby="blog-h">
     <div class="sec-head reveal">
-      <div class="idx">07 / Blog</div>
+      <div class="idx">08 / Blog</div>
       <h2 id="blog-h">Knowledge <em>hub</em>.</h2>
       <p>Practical Cloud and DevOps tutorials: real commands, working code and the reasoning behind them.</p>
     </div>
@@ -1023,7 +1211,7 @@ body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .
   <section id="contact" aria-labelledby="contact-h">
     <div class="contact-wrap">
       <div class="sec-head reveal">
-        <div class="idx">08 / Contact</div>
+        <div class="idx">09 / Contact</div>
         <h2 id="contact-h">Let's <em>connect</em>.</h2>
         <p>Open to conversations about cloud infrastructure, DevOps and new opportunities.</p>
       </div>
@@ -1051,6 +1239,7 @@ body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .
 
 <footer>
   <span>© <span id="yr"></span> Harsh Yadav · AWS Cloud &amp; DevOps Engineer</span>
+  <span class="egg">psst… type <kbd>sudo</kbd> anywhere (or in the chat) 👀</span>
   <span><a href="#home" data-go="home">Back to top ↑</a></span>
 </footer>
 
@@ -1094,7 +1283,7 @@ const LIVE = /(^|\.)generatelogic\.in$|\.vercel\.app$/.test(location.hostname);
 const CONFIG = {
   email: 'yharsh579@gmail.com',
   linkedin: 'https://www.linkedin.com/in/harshyadav579',
-  resumeUrl: '',                             // e.g. '/Harsh_Yadav_Resume.pdf' once you add the PDF to the repo
+  resumeUrl: '/Harsh_Yadav_Resume.pdf',      // the PDF in the repo (phone number removed); '' shows the in-page resume
   formEndpoint: LIVE ? '/api/notify' : '',   // contact form → email to you
   gate: true,                                // ask new visitors for email + purpose first
   gateEndpoint: LIVE ? '/api/notify' : ''    // welcome gate → email to you
@@ -1103,7 +1292,7 @@ const CONFIG = {
 /* =====================================================================
    CONTENT
    ===================================================================== */
-const SECTIONS = [['home','Home'],['about','About'],['skills','Skills'],['experience','Experience'],['projects','Projects'],['certifications','Certifications'],['education','Education'],['blog','Blog'],['contact','Contact']];
+const SECTIONS = [['home','Home'],['about','About'],['skills','Skills'],['experience','Experience'],['projects','Projects'],['playground','Playground'],['certifications','Certifications'],['education','Education'],['blog','Blog'],['contact','Contact']];
 
 const SKILLS = [
  {id:'aws',name:'AWS Cloud',env:'AWS Cloud',fb:'AWS',blurb:'Virtual servers, storage, networking and security on Amazon Web Services.',items:[
@@ -1188,11 +1377,11 @@ const PROJECTS = [
 
 // Add issuer / date / url / image when you have them; empty fields are hidden.
 const CERTS = [
- {name:'AWS Solutions Architect – Associate',issuer:'Amazon Web Services',date:'',url:'',glyph:'cloud'},
- {name:'Advanced Programming',issuer:'',date:'',url:'',glyph:'code'},
- {name:'Microsoft Azure Essentials',issuer:'',date:'',url:'',glyph:'tri'},
- {name:'Microsoft Teams (MS-700)',issuer:'Microsoft',date:'',url:'',glyph:'chat'},
- {name:'Microsoft Entra (MD-102)',issuer:'Microsoft',date:'',url:'',glyph:'shield'}
+ {name:'AWS Solutions Architect – Associate',issuer:'Amazon Web Services',date:'',url:'https://www.credly.com/badges/e4c8a41c-0e09-430a-b3b3-f05e79c8f618/public_url',glyph:'cloud'},
+ {name:'Advanced Programming',issuer:'',date:'',url:'https://drive.google.com/file/d/17M8MpyYMGGTCwZk60SMhhQfTzwV0XcYa/view?usp=sharing',glyph:'code'},
+ {name:'Microsoft Azure Essentials',issuer:'',date:'',url:'https://drive.google.com/file/d/1HeLJ12l42tRAZtUvlH281WpsqXILoWuw/view?usp=sharing',glyph:'tri'},
+ {name:'Microsoft Teams (MS-700)',issuer:'Microsoft',date:'',url:'https://drive.google.com/file/d/1DB20CHz4B7tU5cmAP-SyhXbnetHnKsSu/view?usp=sharing',glyph:'chat'},
+ {name:'Microsoft 365 Endpoint Administrator (MD-102)',issuer:'Microsoft',date:'',url:'https://drive.google.com/file/d/1XRZLI0RtvBEVNx8auQ7z123vWHPPHLdw/view?usp=sharing',glyph:'shield'}
 ];
 
 const BLOG_CATS = ['AWS Cloud','Terraform','Ansible','Docker','Kubernetes','Linux Administration','Microsoft Azure','Microsoft 365','Cloud Security','DevOps Practices'];
@@ -1964,7 +2153,7 @@ const CB=(()=>{
   {k:['cert','certs','certification','certifications','certified','exam','credential','badge'],a:()=>({t:'Harsh\'s certifications:\n'+CERTS.map(c=>`• ${c.name}`).join('\n'),acts:[goTo('certifications')]})},
   {k:['education','college','degree','university','cgpa','gla','btech','b.tech','school','study','studied','padhai','marks'],a:()=>({t:`🎓 <b>B.Tech, Computer Science & Engineering</b>\nGLA University, Mathura · Aug 2022 – May 2026 · CGPA 8.21\n\n🏫 <b>Ivey International School</b>, Firozabad\nIntermediate 80.4% · High School 87.8%`,acts:[goTo('education')]})},
   {k:['contact','email','mail','reach','hire','hiring','linkedin','connect','available','opportunity','opportunities','freelance','collab','collaborate','interview','call','phone','number','baat'],a:()=>({t:`You can reach Harsh at:\n📧 <b>${CONFIG.email}</b>\n💼 linkedin.com/in/harshyadav579\n\nFor hiring or collaboration, the contact form below goes straight to his inbox.`,acts:[A('Copy email',()=>copy(CONFIG.email,'Email copied')),A('LinkedIn ↗',()=>window.open(CONFIG.linkedin,'_blank','noopener')),goTo('contact')]})},
-  {k:['resume','cv','biodata'],a:()=>({t:'Here is Harsh\'s resume 📄',acts:[A('Open resume',()=>{location.hash='resume';})]})},
+  {k:['resume','cv','biodata'],a:()=>({t:'Here is Harsh\'s resume 📄',acts:[A('Download resume (PDF)',()=>{const a=document.createElement('a');a.href=CONFIG.resumeUrl||'#resume';if(CONFIG.resumeUrl)a.download='Harsh_Yadav_Resume.pdf';document.body.appendChild(a);a.click();a.remove();})]})},
   {k:['where','location','based','city','live','relocate','relocation','remote','gurgaon','gurugram','kaha'],a:()=>({t:`Harsh is based in <b>Gurugram, Haryana, India</b> 📍\nFor questions about relocation or remote work, it's best to ask him directly.`,acts:[goTo('contact')]})},
   {k:['blog','article','articles','tutorial','tutorials','learn','guide','post','posts'],a:()=>({t:'The blog has hands-on tutorials:\n'+POSTS.map(p=>`• ${p.title}`).join('\n'),acts:[goTo('blog')]})},
   {k:['youtube','channel','video','videos'],a:()=>({t:'Harsh runs the <b>Generate Logic</b> YouTube channel with Cloud & DevOps tutorials 🎥',acts:[A('Open channel ↗',()=>window.open('https://www.youtube.com/@GENERATELOGIC','_blank','noopener'))]})},
@@ -1990,7 +2179,9 @@ const CB=(()=>{
   msgs.appendChild(m);msgs.scrollTop=msgs.scrollHeight;}
  function typing(){const ty=document.createElement('div');ty.className='cb-typing';ty.innerHTML='<i></i><i></i><i></i>';msgs.appendChild(ty);msgs.scrollTop=msgs.scrollHeight;return ty;}
  function botSay(r){const ty=typing();setTimeout(()=>{ty.remove();addMsg(r.t,'from-bot',r.acts);},calm()?0:Math.min(1400,500+r.t.length*3));}
- function ask(q){q=q.trim().slice(0,500);if(!q)return;addMsg(esc(q),'from-me');botSay(answer(q));}
+ function ask(q){q=q.trim().slice(0,500);if(!q)return;addMsg(esc(q),'from-me');
+  if(/\bsudo\b|\bincident\b/i.test(q)){botSay({t:'🚨 Uh oh… you just triggered incident mode! Watch me fix production.'});setTimeout(()=>{if(innerWidth<620)close();INC.trigger();},1200);return;}
+  botSay(answer(q));}
  function open(){if(opened)return;opened=true;panel.hidden=false;panel.classList.remove('closing');$('#cbLaunch').setAttribute('aria-expanded','true');$('#cbBadge').hidden=true;
   if(!greeted){greeted=true;botSay({t:"Hi! 👋 I'm Harsh's DevOps bot.\nAsk me about his skills, experience, projects, certifications, or how to hire him."});}
   if(matchMedia('(pointer:fine)').matches)setTimeout(()=>input.focus(),300);}
@@ -2028,6 +2219,163 @@ const VOICE=(()=>{
  return {welcome};
 })();
 
+
+/* =====================================================================
+   CONFETTI
+   ===================================================================== */
+function confetti(o={}){
+ if(calm())return;const c=$('#confetti'),x=c.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2);
+ const W=c.width=innerWidth*dpr,H=c.height=innerHeight*dpr;
+ const ox=(o.x!=null?o.x:innerWidth/2)*dpr,oy=(o.y!=null?o.y:innerHeight/3)*dpr;
+ const cols=o.colors||['#22e4ff','#2f7bff','#7ff0a0','#ffd166','#ff7aa8','#ffffff'];
+ const P=Array.from({length:o.n||140},()=>({x:ox,y:oy,vx:(Math.random()-.5)*17*dpr,vy:(-5-Math.random()*13)*dpr,r:(5+Math.random()*5)*dpr,
+  c:cols[Math.random()*cols.length|0],a:Math.random()*6,va:(Math.random()-.5)*.35,life:0}));
+ let t0=performance.now();
+ (function f(now){const dt=Math.min(32,now-t0)/16;t0=now;x.clearRect(0,0,W,H);let alive=0;
+  for(const p of P){p.life+=dt;p.vy+=.42*dt*dpr;p.vx*=.985;p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.va*dt;
+   if(p.y<H+40&&p.life<240){alive++;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.globalAlpha=Math.max(0,1-p.life/240);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore();}}
+  if(alive)requestAnimationFrame(f);else x.clearRect(0,0,W,H);})(t0);
+}
+
+/* =====================================================================
+   CI/CD PIPELINE PROGRESS (Build → Test → Deploy → Monitor)
+   ===================================================================== */
+function initPipeline(){
+ const stages=$$('.pst'),lines=$$('.pline em'),log=$('#pipeLog'),pipe=$('#pipe');
+ const starts=['home','skills','projects','blog'];
+ const msgs=[['compiling profile…','build passed ✓'],['running test suite…','tests passed ✓'],['terraform apply…','deployed to prod ✓'],['watching metrics…','all systems healthy ✓']];
+ const build=140+Math.floor(Date.now()/864e5)%60;const best=[0,0,0,0];let done=false;
+ function upd(){
+  if(document.body.classList.contains('intro'))return;
+  const y=scrollY+innerHeight*.55,end=document.documentElement.scrollHeight,atEnd=scrollY+innerHeight>=end-40;
+  const tops=starts.map(id=>document.getElementById(id).offsetTop).concat(end);
+  for(let i=0;i<4;i++){let f=(y-tops[i])/(tops[i+1]-tops[i]);if(i===3&&atEnd)f=1;best[i]=Math.max(best[i],Math.max(0,Math.min(1,f)));}
+  let cur=-1;
+  stages.forEach((el,i)=>{const f=best[i];el.classList.toggle('ok',f>=1);el.classList.toggle('run',f>0&&f<1);if(f>0&&f<1&&cur<0)cur=i;});
+  lines.forEach((l,i)=>l.style.width=(best[i]*100).toFixed(1)+'%');
+  if(done)return;
+  if(best.every(f=>f>=1)){done=true;pipe.classList.add('done');log.textContent=`🚀 Deployed successfully · build #${build}`;
+   const r=pipe.getBoundingClientRect();confetti({x:r.left+r.width/2,y:r.top,n:90});return;}
+  const passed=best.filter(f=>f>=1).length;
+  log.textContent=`build #${build} · `+(cur>=0?msgs[cur][0]:passed?msgs[passed-1][1]:'queued');
+ }
+ addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);
+ const iv=setInterval(()=>{if(!document.body.classList.contains('intro')){clearInterval(iv);upd();}},400);
+}
+
+/* =====================================================================
+   EXPLORATION XP
+   ===================================================================== */
+function initXP(){
+ const ids=SECTIONS.slice(1).map(s=>s[0]),names=Object.fromEntries(SECTIONS);
+ let seen=new Set();try{seen=new Set(JSON.parse((store&&store.getItem('hy-xp'))||'[]'));}catch(e){}
+ const xp=$('#xp'),ring=$('#xpRing'),num=$('#xpN'),tip=$('#xpTip'),C=2*Math.PI*19;
+ function render(bump){const k=ids.filter(i=>seen.has(i)).length,full=k===ids.length;
+  num.textContent=full?'🏆':`${k}/${ids.length}`;ring.style.strokeDashoffset=(C*(1-k/ids.length)).toFixed(1);
+  tip.innerHTML=`<b>${full?'🏆 Infrastructure Inspector':'Sections explored'}</b>`+ids.map(i=>`<span class="${seen.has(i)?'y':'n'}">${seen.has(i)?'✓':'○'} ${names[i]}</span>`).join('<br>');
+  xp.classList.toggle('full',full);xp.setAttribute('aria-label',`${k} of ${ids.length} sections explored`);
+  if(bump){xp.classList.remove('bump');void xp.offsetWidth;xp.classList.add('bump');}}
+ function unlock(){const a=document.createElement('div');a.className='achv';a.setAttribute('role','status');
+  a.innerHTML='<span class="ic">🏆</span><span><small>Achievement unlocked</small><b>Infrastructure Inspector</b></span>';
+  document.body.appendChild(a);requestAnimationFrame(()=>a.classList.add('show'));confetti({n:180});
+  setTimeout(()=>{a.classList.remove('show');setTimeout(()=>a.remove(),600);},4200);}
+ render();
+ const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting||seen.has(e.target.id)||document.body.classList.contains('intro'))return;
+  seen.add(e.target.id);try{store&&store.setItem('hy-xp',JSON.stringify([...seen]));}catch(_){}
+  render(true);if(ids.every(i=>seen.has(i)))unlock();}),{rootMargin:'-40% 0px -40% 0px'});
+ ids.forEach(i=>io.observe(document.getElementById(i)));
+ xp.onclick=()=>xp.classList.toggle('show');
+}
+
+/* =====================================================================
+   INCIDENT MODE (type "sudo")
+   ===================================================================== */
+const INC=(()=>{
+ let busy=false,buf='';
+ function trigger(){
+  if(busy)return;busy=true;const quick=calm();
+  const box=$('#incident'),log=$('#incLog'),bar=$('#incBar'),bot=$('#incBot'),err=$('#incErr'),lat=$('#incLat');
+  box.hidden=false;box.classList.remove('ok');document.body.classList.add('inc');
+  $('#incTitle').textContent=`INCIDENT #${4000+(Math.random()*900|0)} · Production down`;
+  log.textContent='';bar.style.width='0';bot.className='inc-bot';bot.removeAttribute('style');
+  try{navigator.vibrate&&navigator.vibrate([200,100,200]);}catch(e){}
+  try{pMat&&pMat.color.setHex(0xff4466);}catch(e){}
+  let e=0;const tick=setInterval(()=>{e=Math.min(87,e+Math.random()*14);err.textContent=e.toFixed(0)+'%';lat.textContent=(900+Math.random()*2600|0)+' ms';},250);
+  const steps=[[500,'⚠ PagerDuty: api-gateway 5xx > 50% · paging on-call'],[1700,'🤖 DevOps bot acknowledged the alert'],[2800,'$ kubectl rollout undo deployment/api'],
+   [3800,'$ kubectl scale deployment/api --replicas=6'],[4800,'$ aws cloudwatch get-metric-data · errors falling'],[5800,'✅ Rollback complete · traffic healthy']];
+  steps.forEach(([t,l],i)=>setTimeout(()=>{log.textContent+=(log.textContent?'\n':'')+l;bar.style.width=((i+1)/steps.length*100)+'%';},quick?i*120:t));
+  setTimeout(()=>{const c=$('.inc-card').getBoundingClientRect();bot.classList.add('fly');
+   bot.style.right=Math.max(8,innerWidth-c.right-26)+'px';bot.style.bottom=(innerHeight-c.top-14)+'px';},quick?0:1300);
+  setTimeout(()=>{clearInterval(tick);err.textContent='0.1%';lat.textContent='118 ms';box.classList.add('ok');document.body.classList.remove('inc');
+   $('#incTitle').textContent='RESOLVED · MTTR 6s · fixed by the DevOps bot';try{pMat&&pMat.color.setHex(0x7fdcff);}catch(e){}
+   confetti({colors:['#28c840','#7ff0a0','#22e4ff','#ffffff'],n:120});},quick?900:6300);
+  setTimeout(()=>{box.hidden=true;busy=false;},quick?2600:9800);
+ }
+ addEventListener('keydown',e=>{const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+  if(!e.key||e.key.length!==1)return;buf=(buf+e.key.toLowerCase()).slice(-4);if(buf==='sudo'){buf='';trigger();}});
+ return {trigger};
+})();
+
+/* =====================================================================
+   PLAYGROUND: build your own VPC
+   ===================================================================== */
+function initPlayground(){
+ const pal=$('#pgPal'),board=$('#pgBoard'),log=$('#pgLog'),status=$('#pgStatus'),dep=$('#pgDeploy'),reset=$('#pgReset'),win=$('#pgWin'),wires=$('#pgWires');
+ if(!pal)return;
+ const SV={alb:'ALB',ec2:'EC2',rds:'RDS',s3:'S3'};
+ const HINT={alb:'a load balancer faces the internet, so it goes in the public subnet.',ec2:'app servers stay private; only the load balancer is public.',
+  rds:'databases belong in a private data subnet, never exposed to the internet.',s3:'S3 is a regional service: it lives outside the VPC (reach it through a VPC endpoint).'};
+ const placed={};let sel=null,ghost=null,drag=null,deployed=false;
+ const icon=k=>pal.querySelector(`[data-k="${k}"] svg`).outerHTML;
+ function line(t,c){const d=document.createElement('div');if(c)d.className=c;d.textContent=t;log.appendChild(d);while(log.children.length>10)log.firstChild.remove();}
+ function intro(){log.innerHTML='';line('$ terraform init','c');line('Terraform has been successfully initialized!','g');line('# Place all 4 services, then apply.');}
+ function upd(){const k=Object.keys(placed).length;if(!deployed){status.textContent=`${k} / 4 resources placed`;status.classList.toggle('ready',k===4);}dep.disabled=k<4||deployed;}
+ function clearSel(){sel=null;$$('.pg-item',pal).forEach(x=>x.classList.remove('sel'));}
+ function place(k,slot){
+  if(deployed||placed[k]||slot.classList.contains('filled'))return false;
+  if(slot.dataset.accept!==k){slot.classList.remove('bad');void slot.offsetWidth;slot.classList.add('bad');line(`✗ Not there: ${HINT[k]}`,'w');return false;}
+  placed[k]=slot;slot.classList.add('filled');slot.innerHTML=icon(k)+`<b>${SV[k]}</b>`;slot.setAttribute('aria-label',SV[k]+' placed');
+  pal.querySelector(`[data-k="${k}"]`).classList.add('used');
+  line(`+ ${SV[k]} → ${slot.closest('.pg-sub').querySelector('.pg-lbl').textContent.toLowerCase()}`,'g');clearSel();upd();return true;}
+ // tap / click / keyboard: pick a service, then a slot
+ pal.addEventListener('click',e=>{const it=e.target.closest('.pg-item');if(!it||it.classList.contains('used')||it.dataset.dragged||deployed)return;
+  sel=sel===it.dataset.k?null:it.dataset.k;$$('.pg-item',pal).forEach(x=>x.classList.toggle('sel',x.dataset.k===sel));if(sel)line(`Selected ${SV[sel]}, now pick its spot.`);});
+ board.addEventListener('click',e=>{const slot=e.target.closest('.pg-slot');if(slot&&sel)place(sel,slot);});
+ // drag and drop (mouse, touch, pen)
+ pal.addEventListener('pointerdown',e=>{const it=e.target.closest('.pg-item');if(!it||it.classList.contains('used')||deployed)return;
+  drag={k:it.dataset.k,it,x:e.clientX,y:e.clientY,moved:false,id:e.pointerId};});
+ addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;
+  if(!drag.moved&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6)return;
+  if(!drag.moved){drag.moved=true;ghost=drag.it.cloneNode(true);ghost.classList.add('pg-ghost');ghost.style.width=drag.it.offsetWidth+'px';document.body.appendChild(ghost);}
+  ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px';
+  const el=document.elementFromPoint(e.clientX,e.clientY),hot=el&&el.closest('.pg-slot');
+  $$('.pg-slot',board).forEach(s=>s.classList.toggle('hot',s===hot&&!s.classList.contains('filled')));e.preventDefault();},{passive:false});
+ const end=e=>{if(!drag||e.pointerId!==drag.id)return;const d=drag;drag=null;$$('.pg-slot',board).forEach(s=>s.classList.remove('hot'));
+  if(ghost){ghost.remove();ghost=null;}if(!d.moved)return;
+  d.it.dataset.dragged='1';setTimeout(()=>delete d.it.dataset.dragged,60);
+  const el=document.elementFromPoint(e.clientX,e.clientY),slot=el&&el.closest('.pg-slot');if(slot)place(d.k,slot);};
+ addEventListener('pointerup',end);addEventListener('pointercancel',e=>{if(drag&&e.pointerId===drag.id){drag=null;if(ghost){ghost.remove();ghost=null;}}});
+ // terraform apply
+ dep.onclick=()=>{if(deployed||Object.keys(placed).length<4)return;deployed=true;dep.disabled=true;status.textContent='⏳ applying…';
+  const steps=[['$ terraform apply -auto-approve','c'],['aws_vpc.main: Creating…'],['aws_vpc.main: Creation complete after 2s','g'],
+   ['aws_lb.web: Creating…'],['aws_lb.web: Creation complete after 3s','g','alb'],['aws_instance.app: Creating…'],['aws_instance.app: Creation complete after 4s','g','ec2'],
+   ['aws_db_instance.data: Creating…'],['aws_db_instance.data: Creation complete after 6s','g','rds'],['aws_s3_bucket.assets: Creation complete after 1s','g','s3'],
+   ['Apply complete! Resources: 5 added, 0 changed, 0 destroyed.','g']];
+  steps.forEach(([t,c,k],i)=>setTimeout(()=>{line(t,c);if(k)placed[k].classList.add('live');if(i===steps.length-1)finish();},calm()?i*10:350+i*380));};
+ function finish(){drawWires();win.classList.add('show');status.textContent='✅ 5 resources live in ap-south-1';status.classList.add('ready');
+  const r=board.getBoundingClientRect();confetti({x:r.left+r.width/2,y:r.top+r.height/2,n:130});setTimeout(()=>win.classList.remove('show'),3800);}
+ function center(el){const b=board.getBoundingClientRect(),r=el.getBoundingClientRect();return [r.left-b.left+r.width/2,r.top-b.top+r.height/2];}
+ function drawWires(){const net=$('.pg-net',board),pairs=[[net,placed.alb],[placed.alb,placed.ec2],[placed.ec2,placed.rds],[placed.ec2,placed.s3]];
+  wires.innerHTML=pairs.map(([a,b],i)=>{const [x1,y1]=center(a),[x2,y2]=center(b),my=(y1+y2)/2;
+   const d=`M${x1.toFixed(1)} ${y1.toFixed(1)} C${x1.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+   return `<path class="pg-wire" d="${d}"/>`+(calm()?'':`<circle class="pg-pkt" r="4"><animateMotion dur="${(1.3+i*.25).toFixed(2)}s" repeatCount="indefinite" path="${d}"/></circle>`);}).join('');}
+ addEventListener('resize',()=>{if(deployed)drawWires();});
+ reset.onclick=()=>{deployed=false;Object.keys(placed).forEach(k=>{const s=placed[k];s.className='pg-slot';s.innerHTML='<span>Drop a service</span>';s.removeAttribute('aria-label');delete placed[k];});
+  $$('.pg-item',pal).forEach(x=>x.classList.remove('used','sel'));sel=null;wires.innerHTML='';win.classList.remove('show');status.classList.remove('ready');intro();upd();};
+ intro();upd();
+}
+
 /* =====================================================================
    WIRING
    ===================================================================== */
@@ -2036,9 +2384,9 @@ function init(){
  $$('[data-split]').forEach(el=>{let i=el.classList.contains('b')?5:0;el.innerHTML=[...el.textContent].map(c=>`<span class="ch" aria-hidden="true" style="--i:${i++}">${c}</span>`).join('');});
  SECTIONS.slice(1).forEach(([id],i)=>document.getElementById(id).dataset.n='0'+(i+1));
  renderNav();renderStats();renderSkills();renderTimeline();renderProjects();renderCerts();renderBlog();
- animPack();initAvatar();CB.init();
+ animPack();initAvatar();CB.init();initPipeline();initXP();initPlayground();
  $('#emailTxt').textContent=CONFIG.email;$('#liLink').href=CONFIG.linkedin;$('#yr').textContent=new Date().getFullYear();
- if(CONFIG.resumeUrl){const b=$('#resumeBtn');b.href=CONFIG.resumeUrl;b.setAttribute('download','');}
+ if(CONFIG.resumeUrl){const b=$('#resumeBtn');b.href=CONFIG.resumeUrl;b.setAttribute('download','Harsh_Yadav_Resume.pdf');}
 
  let ok3d=false;
  if(webgl){try{initScene();ok3d=true;}catch(err){console.warn('3D disabled',err);}}
@@ -2082,7 +2430,7 @@ function init(){
 
  // scroll
  const ghost=$$('section[data-n]');
- const onScroll=()=>{const max=document.documentElement.scrollHeight-innerHeight;st.scrollP=max>0?scrollY/max:0;$('#progress').style.width=(st.scrollP*100)+'%';
+ const onScroll=()=>{const max=document.documentElement.scrollHeight-innerHeight;st.scrollP=max>0?scrollY/max:0;
   if(!calm())ghost.forEach(g=>{const r=g.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight)g.style.setProperty('--py',(r.top*-.18).toFixed(1)+'px');});};
  addEventListener('scroll',onScroll,{passive:true});onScroll();
 
