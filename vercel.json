@@ -26,10 +26,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "api/chat.js": {
-      "maxDuration": 40
-    }
-  }
+  ]
 }

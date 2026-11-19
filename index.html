@@ -1982,26 +1982,12 @@ const CB=(()=>{
   msgs.appendChild(m);msgs.scrollTop=msgs.scrollHeight;}
  function typing(){const ty=document.createElement('div');ty.className='cb-typing';ty.innerHTML='<i></i><i></i><i></i>';msgs.appendChild(ty);msgs.scrollTop=msgs.scrollHeight;return ty;}
  function botSay(r){const ty=typing();setTimeout(()=>{ty.remove();addMsg(r.t,'from-bot',r.acts);},calm()?0:Math.min(1400,500+r.t.length*3));}
- // AI mode (live site only): Gemini via /api/chat, with conversation memory; FAQ answers as fallback
- const AI=typeof LIVE!=='undefined'&&LIVE;let aiOff=false,aiPauseUntil=0,history=[],pending=false;
- const fmt=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^\s*[-*]\s+/gm,'• ');
- async function ask(q){q=q.trim().slice(0,500);if(!q||pending)return;addMsg(esc(q),'from-me');
-  const local=answer(q);
-  if(!AI||aiOff||Date.now()<aiPauseUntil){botSay(local);return;}
-  pending=true;history.push({role:'user',text:q});const ty=typing();
-  try{const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),25000);
-   const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history}),signal:ctl.signal});clearTimeout(tm);
-   const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||String(r.status));
-   history.push({role:'model',text:d.text});history=history.slice(-10);
-   ty.remove();addMsg(fmt(d.text),'from-bot',local.fallback?null:local.acts);
-  }catch(e){ty.remove();history.pop();if(/not configured/.test(e.message))aiOff=true;else aiPauseUntil=Date.now()+(/quota/.test(e.message)?10:2)*60*1000;addMsg(local.t,'from-bot',local.acts);}
-  finally{pending=false;}}
+ function ask(q){q=q.trim().slice(0,500);if(!q)return;addMsg(esc(q),'from-me');botSay(answer(q));}
  function open(){if(opened)return;opened=true;panel.hidden=false;panel.classList.remove('closing');$('#cbLaunch').setAttribute('aria-expanded','true');$('#cbBadge').hidden=true;
   if(!greeted){greeted=true;botSay({t:"Hi! 👋 I'm Harsh's DevOps bot.\nAsk me about his skills, experience, projects, certifications, or how to hire him."});}
   if(matchMedia('(pointer:fine)').matches)setTimeout(()=>input.focus(),300);}
  function close(){if(!opened)return;opened=false;panel.classList.add('closing');$('#cbLaunch').setAttribute('aria-expanded','false');setTimeout(()=>{if(!opened)panel.hidden=true;},240);}
  function init(){panel=$('#cbPanel');msgs=$('#cbMsgs');input=$('#cbText');
-  if(AI){const st=$('.cb-head small');st.innerHTML='<i></i>AI-powered · Online';$('#cbText').placeholder='Ask me anything about Harsh…';}
   $('#cbQuick').innerHTML=QUICK.map(q=>`<button type="button">${q}</button>`).join('');
   $('#cbQuick').onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent.replace(/^\S+\s/,''));};
   $('#cbForm').onsubmit=e=>{e.preventDefault();ask(input.value);input.value='';};
