@@ -1140,14 +1140,14 @@ const SKILLS = [
 ];
 
 const EXPERIENCE = [
- {company:'Cache Digitech Pvt. Ltd.',role:'AWS Cloud Engineer',dates:'Aug 2026 – Present',loc:'Gurugram, Haryana',current:true,
+ {company:'Cache Digitech Pvt. Ltd.',role:'AWS Cloud Engineer',dates:'Aug 2026 – Present',start:'2026-08',end:null,loc:'Gurugram, Haryana',current:true,
   points:['Managing AWS infrastructure including EC2, S3, IAM, VPC, Security Groups and CloudWatch for cloud operations, monitoring and troubleshooting.',
    'Provisioning and managing AWS resources with Terraform, following Infrastructure as Code practices for consistent, scalable deployments.',
    'Working with Linux, Git, Docker and CI/CD practices to automate application deployment and streamline DevOps workflows.',
    'Monitoring AWS workloads and troubleshooting infrastructure issues.',
    'Supporting the security, availability and performance of cloud environments.'],
   tech:['EC2','S3','IAM','VPC','Security Groups','CloudWatch','Terraform','Linux','Git','Docker','CI/CD']},
- {company:'Meridian Pvt. Ltd.',role:'Cloud Engineer – M365 & Azure',dates:'Aug 2025 – Jul 2026',loc:'Gurugram, Haryana',
+ {company:'Meridian Pvt. Ltd.',role:'Cloud Engineer – M365 & Azure',dates:'Aug 2025 – Jul 2026',start:'2025-08',end:'2026-07',loc:'Gurugram, Haryana',
   points:['Administered Microsoft 365 services: user lifecycle, licensing and tenant configuration.',
    'Supported Exchange, SharePoint, OneDrive and Teams migrations.',
    'Managed Microsoft Intune, Entra ID and Conditional Access for secure Windows endpoint and identity management.',
@@ -1373,6 +1373,12 @@ AllowUsers ec2-user</code></pre>
 const $ = (s,el=document)=>el.querySelector(s);
 const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
 const esc = s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// Experience durations are calculated from the dates, so they update by themselves every month.
+// Months are counted inclusively, the way LinkedIn does (Aug–Jul = 12 months).
+function monthsIn(e){const [y1,m1]=e.start.split('-').map(Number);const n=new Date();
+ const [y2,m2]=e.end?e.end.split('-').map(Number):[n.getFullYear(),n.getMonth()+1];return Math.max(1,(y2-y1)*12+(m2-m1)+1);}
+function fmtDur(m){const y=Math.floor(m/12),mo=m%12;return [y?`${y} yr${y>1?'s':''}`:'',mo?`${mo} mo${mo>1?'s':''}`:''].filter(Boolean).join(' ');}
+function totalExp(){return fmtDur(EXPERIENCE.reduce((a,e)=>a+monthsIn(e),0));}
 const fmtDate = d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
 const readTime = html=>Math.max(1,Math.ceil(html.replace(/<[^>]+>/g,' ').split(/\s+/).filter(Boolean).length/200));
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200);}
@@ -1473,11 +1479,11 @@ function showSkillInfo(i){const c=SKILLS.find(x=>x.id===st.cat);const box=$('#sk
  const s=c.items[i];box.innerHTML=`<small>${esc(c.name)} · ${String(i+1).padStart(2,'0')}</small><h3>${esc(s[0])}</h3><p>${esc(s[1])}</p>`;}
 
 function renderTimeline(){
- $('#timeline').insertAdjacentHTML('beforeend',EXPERIENCE.map((e,i)=>`<button class="tl-item ${i===0?'on':''}" data-i="${i}" type="button"><small>${esc(e.dates)}</small><b>${esc(e.company)}</b><span>${esc(e.role)}</span></button>`).join(''));
+ $('#timeline').insertAdjacentHTML('beforeend',EXPERIENCE.map((e,i)=>`<button class="tl-item ${i===0?'on':''}" data-i="${i}" type="button"><small>${esc(e.dates)} · ${fmtDur(monthsIn(e))}</small><b>${esc(e.company)}</b><span>${esc(e.role)}</span></button>`).join(''));
  showExp(0);
 }
 function showExp(i){const e=EXPERIENCE[i];$$('.tl-item').forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
- $('#expPanel').innerHTML=`<div class="top"><div><h3>${esc(e.company)}</h3><div class="role2">${esc(e.role)}</div></div><span class="badge">${e.current?'● ':''}${esc(e.dates)}</span></div>
+ $('#expPanel').innerHTML=`<div class="top"><div><h3>${esc(e.company)}</h3><div class="role2">${esc(e.role)}</div></div><span class="badge">${e.current?'● ':''}${esc(e.dates)} · ${fmtDur(monthsIn(e))}</span></div>
  <div class="loc">${esc(e.loc)}</div><ul>${e.points.map((p,k)=>`<li style="--i:${k}">${esc(p)}</li>`).join('')}</ul>
  <div class="chips">${e.tech.map(t=>`<span class="chip">${esc(t)}</span>`).join('')}</div>`;}
 
@@ -1949,9 +1955,9 @@ const CB=(()=>{
  const goTo=id=>A(({projects:'Open projects',experience:'View experience',certifications:'See certifications',contact:'Contact form',blog:'Read the blog',skills:'Explore skills',education:'Education'})[id],()=>{go(id);if(innerWidth<620)close();});
  const intents=[
   {k:['hi','hello','hey','hii','hiii','namaste','hola','yo','sup','good morning','good evening'],a:()=>({t:"Hey! 👋 I'm Harsh's DevOps bot. Ask me anything about his skills, experience, projects, certifications or how to reach him."})},
-  {k:['who','about','introduce','tell me about','kaun','kon','harsh','yourself','summary','profile','background'],a:()=>({t:`<b>Harsh Yadav</b> is an AWS Cloud & DevOps Engineer in Gurugram, India. ☁️\n\nHe currently works as an <b>AWS Cloud Engineer at Cache Digitech</b>, managing AWS infrastructure with Terraform, and before that was a <b>Cloud Engineer (M365 & Azure) at Meridian</b>. He holds a B.Tech in CSE from GLA University (CGPA 8.21).`,acts:[goTo('experience'),goTo('projects')]})},
+  {k:['who','about','introduce','tell me about','kaun','kon','harsh','yourself','summary','profile','background'],a:()=>({t:`<b>Harsh Yadav</b> is an AWS Cloud & DevOps Engineer in Gurugram, India. ☁️\n\nHe has <b>${totalExp()}</b> of experience. He currently works as an <b>AWS Cloud Engineer at Cache Digitech</b>, managing AWS infrastructure with Terraform, and before that was a <b>Cloud Engineer (M365 & Azure) at Meridian</b>. He holds a B.Tech in CSE from GLA University (CGPA 8.21).`,acts:[goTo('experience'),goTo('projects')]})},
   {k:['skill','skills','tech','stack','tools','technologies','know','expert','good at','aata','kya aata'],a:()=>({t:SKILLS.map(c=>`<b>${c.name}:</b> ${c.items.map(i=>i[0]).join(', ')}`).join('\n\n'),acts:[goTo('skills')]})},
-  {k:['experience','work','job','jobs','company','companies','current','working','career','role','cache','digitech','meridian','years','kaha kaam','naukri'],a:()=>({t:EXPERIENCE.map(e=>`<b>${e.role}</b> · ${e.company}\n${e.dates} · ${e.loc}`).join('\n\n')+`\n\nThat's 1+ year across AWS infrastructure and Microsoft cloud.`,acts:[goTo('experience')]})},
+  {k:['experience','years','year','how long','kitna experience','total experience','work','job','jobs','company','companies','current','working','career','role','cache','digitech','meridian','years','kaha kaam','naukri'],a:()=>({t:EXPERIENCE.map(e=>`<b>${e.role}</b> · ${e.company}\n${e.dates} (${fmtDur(monthsIn(e))}) · ${e.loc}`).join('\n\n')+`\n\nThat's <b>${totalExp()}</b> of experience in total, across AWS infrastructure and Microsoft cloud.`,acts:[goTo('experience')]})},
   {k:['project','projects','built','build','portfolio','work samples','generatelogic','generate logic','website','github','repo','code'],a:()=>({t:PROJECTS.map(p=>`<b>${p.title}</b>\n${p.summary}`).join('\n\n'),acts:[goTo('projects'),A('Visit generatelogic.in ↗',()=>window.open('https://generatelogic.in','_blank','noopener'))]})},
   {k:['cert','certs','certification','certifications','certified','exam','credential','badge'],a:()=>({t:'Harsh\'s certifications:\n'+CERTS.map(c=>`• ${c.name}`).join('\n'),acts:[goTo('certifications')]})},
   {k:['education','college','degree','university','cgpa','gla','btech','b.tech','school','study','studied','padhai','marks'],a:()=>({t:`🎓 <b>B.Tech, Computer Science & Engineering</b>\nGLA University, Mathura · Aug 2022 – May 2026 · CGPA 8.21\n\n🏫 <b>Ivey International School</b>, Firozabad\nIntermediate 80.4% · High School 87.8%`,acts:[goTo('education')]})},
