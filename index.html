@@ -1976,21 +1976,35 @@ const CB=(()=>{
   if(sk)return {t:`Yes! <b>${sk.n}</b> is part of Harsh's ${sk.cat} skills.\n${sk.d}`,acts:[goTo('skills')]};
   let best=null,score=0;intents.forEach(it=>{const sc=has(t,it.k);if(sc>score){score=sc;best=it;}});
   if(best)return best.a();
-  return {t:"Hmm, I'm a simple bot and didn't catch that 🤔 Try one of the quick questions below, or ask Harsh directly.",acts:[goTo('contact')]};
+  return {fallback:true,t:"Hmm, I'm a simple bot and didn't catch that 🤔 Try one of the quick questions below, or ask Harsh directly.",acts:[goTo('contact')]};
  }
  const QUICK=['👋 Who is Harsh?','🛠 Skills','💼 Experience','🚀 Projects','🏅 Certifications','🎓 Education','📄 Resume','📧 Contact'];
  let panel,msgs,input,opened=false,greeted=false;
  function addMsg(html,who,acts){const m=document.createElement('div');m.className='cb-msg '+who;m.innerHTML=html;
   if(acts&&acts.length){const w=document.createElement('div');w.className='cb-acts';acts.forEach(a=>{const b=document.createElement('button');b.type='button';b.textContent=a.label;b.onclick=a.fn;w.appendChild(b);});m.appendChild(w);}
   msgs.appendChild(m);msgs.scrollTop=msgs.scrollHeight;}
- function botSay(r){const ty=document.createElement('div');ty.className='cb-typing';ty.innerHTML='<i></i><i></i><i></i>';msgs.appendChild(ty);msgs.scrollTop=msgs.scrollHeight;
-  setTimeout(()=>{ty.remove();addMsg(r.t,'from-bot',r.acts);},calm()?0:Math.min(1400,500+r.t.length*3));}
- function ask(q){q=q.trim();if(!q)return;addMsg(esc(q),'from-me');botSay(answer(q));}
+ function typing(){const ty=document.createElement('div');ty.className='cb-typing';ty.innerHTML='<i></i><i></i><i></i>';msgs.appendChild(ty);msgs.scrollTop=msgs.scrollHeight;return ty;}
+ function botSay(r){const ty=typing();setTimeout(()=>{ty.remove();addMsg(r.t,'from-bot',r.acts);},calm()?0:Math.min(1400,500+r.t.length*3));}
+ // AI mode (live site only): Gemini via /api/chat, with conversation memory; FAQ answers as fallback
+ const AI=typeof LIVE!=='undefined'&&LIVE;let aiOff=false,history=[],pending=false;
+ const fmt=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^\s*[-*]\s+/gm,'• ');
+ async function ask(q){q=q.trim().slice(0,500);if(!q||pending)return;addMsg(esc(q),'from-me');
+  const local=answer(q);
+  if(!AI||aiOff){botSay(local);return;}
+  pending=true;history.push({role:'user',text:q});const ty=typing();
+  try{const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),16000);
+   const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history}),signal:ctl.signal});clearTimeout(tm);
+   const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||String(r.status));
+   history.push({role:'model',text:d.text});history=history.slice(-10);
+   ty.remove();addMsg(fmt(d.text),'from-bot',local.fallback?null:local.acts);
+  }catch(e){ty.remove();history.pop();if(/not configured/.test(e.message))aiOff=true;addMsg(local.t,'from-bot',local.acts);}
+  finally{pending=false;}}
  function open(){if(opened)return;opened=true;panel.hidden=false;panel.classList.remove('closing');$('#cbLaunch').setAttribute('aria-expanded','true');$('#cbBadge').hidden=true;
   if(!greeted){greeted=true;botSay({t:"Hi! 👋 I'm Harsh's DevOps bot.\nAsk me about his skills, experience, projects, certifications, or how to hire him."});}
   if(matchMedia('(pointer:fine)').matches)setTimeout(()=>input.focus(),300);}
  function close(){if(!opened)return;opened=false;panel.classList.add('closing');$('#cbLaunch').setAttribute('aria-expanded','false');setTimeout(()=>{if(!opened)panel.hidden=true;},240);}
  function init(){panel=$('#cbPanel');msgs=$('#cbMsgs');input=$('#cbText');
+  if(AI){const st=$('.cb-head small');st.innerHTML='<i></i>AI-powered · Online';$('#cbText').placeholder='Ask me anything about Harsh…';}
   $('#cbQuick').innerHTML=QUICK.map(q=>`<button type="button">${q}</button>`).join('');
   $('#cbQuick').onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent.replace(/^\S+\s/,''));};
   $('#cbForm').onsubmit=e=>{e.preventDefault();ask(input.value);input.value='';};
