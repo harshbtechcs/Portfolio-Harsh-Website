@@ -82,13 +82,22 @@ module.exports = async (req, res) => {
     return res.status(400).json({ ok: false, error: 'last message must be from the user' });
   }
 
-  const model = process.env.GEMINI_MODEL || 'gemini-flash-latest';
+  // Try the configured model first, then fall back through stable aliases if a name isn't available.
+  const models = [...new Set([process.env.GEMINI_MODEL, 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash'].filter(Boolean))];
   try {
-    let r = await callGemini(model, key, contents, true);
-    if (r.status === 400) r = await callGemini(model, key, contents, false); // older models: no thinkingConfig
+    let r = null;
+    for (const model of models) {
+      r = await callGemini(model, key, contents, true);
+      if (r.status === 400 && !isKeyProblem(r.data)) r = await callGemini(model, key, contents, false); // no thinkingConfig
+      if (r.status === 404) { console.error('gemini model not found:', model); continue; }
+      if (r.status === 200) break;
+      if (r.status !== 429) break; // key/permission problems won't be fixed by another model
+      console.error('gemini quota reached on', model);
+    }
     if (r.status !== 200) {
-      console.error('gemini error', r.status, JSON.stringify(r.data).slice(0, 300));
-      return res.status(503).json({ ok: false, error: r.status === 429 ? 'ai quota reached' : 'ai unavailable' });
+      const reason = ((r.data || {}).error || {}).status || '';
+      console.error('gemini error', r.status, JSON.stringify(r.data).slice(0, 400));
+      return res.status(503).json({ ok: false, error: r.status === 429 ? 'ai quota reached' : 'ai unavailable', code: r.status, reason });
     }
     const parts = (((r.data.candidates || [])[0] || {}).content || {}).parts || [];
     const text = parts.filter((p) => p.text && !p.thought).map((p) => p.text).join('').trim();
@@ -99,6 +108,11 @@ module.exports = async (req, res) => {
     return res.status(503).json({ ok: false, error: 'ai unavailable' });
   }
 };
+
+function isKeyProblem(data) {
+  const e = (data && data.error) || {};
+  return /API_KEY|api key/i.test(JSON.stringify(e.details || '') + ' ' + (e.message || ''));
+}
 
 function safeParse(s) {
   try { return JSON.parse(s); } catch (e) { return {}; }
