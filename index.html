@@ -685,6 +685,14 @@ body.calm .av-scan{display:none}
 .cb-input button svg{width:18px;height:18px}
 @media (max-width:520px){.cb-panel{right:8px;left:8px;width:auto;bottom:86px;height:calc(100vh - 110px)}.cb-launch{right:14px;bottom:14px}}
 
+/* robot voice */
+.cb-snd{margin-left:auto;font-size:14px}
+.cb-snd + .cb-x{margin-left:6px}
+.bot.talking .b-mouth{animation:talk .16s ease-in-out infinite alternate}
+@keyframes talk{from{transform:scale(1.1,.5)}to{transform:scale(1.5,2.1)}}
+.bot.talking .b-eq rect{animation-duration:.25s!important}
+.bot.talking .b-ant-glow{animation-duration:.5s}
+
 /* ---------- reduced motion ---------- */
 body.calm *,body.calm *:before,body.calm *:after{animation-duration:.001s!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.001s!important;transition-delay:0s!important}
 body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .hero .fade,body.calm h1 .ch,body.calm .chip{clip-path:none!important;opacity:1!important;transform:none!important;filter:none!important}
@@ -1063,6 +1071,7 @@ body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .
   <header class="cb-head">
     <span class="cb-ava" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="38" rx="18" fill="#eef3fa"/><rect x="14" y="18" width="36" height="26" rx="12" fill="#06102a"/><rect x="22" y="24" width="6" height="12" rx="3" fill="#5ff3ff"/><rect x="36" y="24" width="6" height="12" rx="3" fill="#5ff3ff"/></svg></span>
     <div><b id="cbTitle">Harsh's DevOps Bot</b><small><i></i>Online · replies instantly</small></div>
+    <button class="cb-x cb-snd" id="cbSound" type="button" aria-label="Robot voice on" aria-pressed="true" title="Robot voice">🔊</button>
     <button class="cb-x" id="cbClose" type="button" aria-label="Close chat">✕</button>
   </header>
   <div class="cb-msgs" id="cbMsgs" aria-live="polite"></div>
@@ -1804,7 +1813,7 @@ function loop(now){
 
 /* ---------- intro ---------- */
 function finishIntro(){if(st.introDone)return;st.introDone=true;document.body.classList.remove('intro');$('#intro').classList.add('gone');
- setTimeout(()=>$('#intro').remove(),1000);document.querySelector('.hero').classList.add('revealed');typeRole();setTimeout(()=>{const a=$('#avatar');a&&a.hello&&a.hello();},2600);}
+ setTimeout(()=>$('#intro').remove(),1000);document.querySelector('.hero').classList.add('revealed');typeRole();setTimeout(()=>{const a=$('#avatar');a&&a.hello&&a.hello('Hi there, welcome! 👋');VOICE.welcome();},2600);}
 function typeRole(){const el=$('#typed'),txt='AWS CLOUD & DEVOPS ENGINEER';if(calm()){el.textContent=txt;return;}let i=0;
  setTimeout(function f(){el.textContent=txt.slice(0,++i);if(i<txt.length)setTimeout(f,38);},500);}
 function startIntro(){
@@ -1917,7 +1926,7 @@ function initAvatar(){
   bot.classList.remove('waving');bot.getBoundingClientRect();bot.classList.add('waving','happy');
   bubble.textContent=msg||lines[(li=(li+1)%lines.length)];bubble.classList.add('show');
   setTimeout(()=>{bot.classList.remove('waving','happy');busy=false;},2300);clearTimeout(hello.t);hello.t=setTimeout(()=>bubble.classList.remove('show'),3200);}
- av.addEventListener('pointerenter',()=>hello());av.addEventListener('click',()=>{hello('Let\'s chat! 💬');CB.open();});
+ av.addEventListener('pointerenter',()=>hello());av.addEventListener('click',()=>{hello('Let\'s chat! 💬');VOICE.say("Let's chat! Ask me anything about Harsh.");CB.open();});
  av.hello=()=>hello(lines[0]);
  // idle: a happy glance every so often
  setInterval(()=>{if(!busy&&!calm()&&document.querySelector('.hero.revealed')&&Math.random()<.5){bot.classList.add('happy');setTimeout(()=>bot.classList.remove('happy'),900);}},9000);
@@ -1994,6 +2003,36 @@ const CB=(()=>{
  return {init,open,close,ask};
 })();
 
+
+/* =====================================================================
+   ROBOT VOICE (Web Speech API; browsers only allow it after a click)
+   ===================================================================== */
+const VOICE=(()=>{
+ const ok='speechSynthesis' in window&&'SpeechSynthesisUtterance' in window;
+ let voice=null,on=true;
+ try{on=(store&&store.getItem('hy-voice'))!=='off';}catch(e){}
+ function pick(){if(!ok)return;const vs=speechSynthesis.getVoices();if(!vs.length)return;
+  const pref=[v=>v.lang==='en-IN'&&/male|rishi|ravi|prabhat/i.test(v.name),v=>v.lang==='en-IN',v=>/Google UK English Male/i.test(v.name),v=>/Google US English/i.test(v.name),v=>/^en(-|_)/i.test(v.lang)];
+  for(const f of pref){const v=vs.find(f);if(v){voice=v;break;}}}
+ if(ok){pick();speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',pick);}
+ const clean=t=>t.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu,'').replace(/\s+/g,' ').trim();
+ function say(text){if(!ok||!on)return false;try{speechSynthesis.cancel();
+   const u=new SpeechSynthesisUtterance(clean(text));if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-IN';u.rate=1.02;u.pitch=1.15;u.volume=1;
+   const bot=$('#bot');u.onstart=()=>bot&&bot.classList.add('talking');u.onend=u.onerror=()=>bot&&bot.classList.remove('talking');
+   speechSynthesis.speak(u);return true;}catch(e){return false;}}
+ function stop(){if(ok){try{speechSynthesis.cancel();}catch(e){}}const b=$('#bot');b&&b.classList.remove('talking');}
+ function setOn(v){on=v;try{store&&store.setItem('hy-voice',v?'on':'off');}catch(e){}if(!v)stop();
+  const b=$('#cbSound');if(b){b.textContent=v?'🔊':'🔇';b.setAttribute('aria-pressed',v);b.setAttribute('aria-label',v?'Robot voice on':'Robot voice off');}}
+ const WELCOME="Hi there, and welcome! I'm Harsh's DevOps bot. Harsh is an AWS Cloud and DevOps engineer who builds secure, scalable and automated cloud infrastructure. Have a look around, and click on me anytime if you have a question!";
+ let welcomed=false;try{welcomed=sessionStorage.getItem('hy-welcomed')==='1';}catch(e){}
+ function welcome(){if(welcomed||!ok||!on)return;
+  const go=()=>{if(welcomed)return;welcomed=true;try{sessionStorage.setItem('hy-welcomed','1');}catch(e){}say(WELCOME);};
+  const active=navigator.userActivation?navigator.userActivation.hasBeenActive:false;
+  if(active)go();else{const once=()=>{removeEventListener('pointerdown',once,true);removeEventListener('keydown',once,true);setTimeout(go,150);};
+   addEventListener('pointerdown',once,true);addEventListener('keydown',once,true);}}
+ return {say,stop,setOn,isOn:()=>on,welcome,ok};
+})();
+
 /* =====================================================================
    WIRING
    ===================================================================== */
@@ -2002,7 +2041,7 @@ function init(){
  $$('[data-split]').forEach(el=>{let i=el.classList.contains('b')?5:0;el.innerHTML=[...el.textContent].map(c=>`<span class="ch" aria-hidden="true" style="--i:${i++}">${c}</span>`).join('');});
  SECTIONS.slice(1).forEach(([id],i)=>document.getElementById(id).dataset.n='0'+(i+1));
  renderNav();renderStats();renderSkills();renderTimeline();renderProjects();renderCerts();renderBlog();
- animPack();initAvatar();CB.init();
+ animPack();initAvatar();CB.init();VOICE.setOn(VOICE.isOn());if(!VOICE.ok)$('#cbSound').hidden=true;$('#cbSound').onclick=()=>VOICE.setOn(!VOICE.isOn());
  $('#emailTxt').textContent=CONFIG.email;$('#liLink').href=CONFIG.linkedin;$('#yr').textContent=new Date().getFullYear();
  if(CONFIG.resumeUrl){const b=$('#resumeBtn');b.href=CONFIG.resumeUrl;b.setAttribute('download','');}
 
