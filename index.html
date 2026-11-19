@@ -634,6 +634,57 @@ body.calm .bot{opacity:1;transform:none;filter:none}body.calm .b-eye{transform:n
 body.calm .av-rings,body.calm .av-glow,body.calm .av-tag,body.calm .av-term{opacity:1}
 body.calm .av-scan{display:none}
 
+/* ================= CHATBOT ================= */
+.cb-launch{position:fixed;right:22px;bottom:22px;z-index:58;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#1b3a7a,#071027 70%);border:1px solid rgba(34,228,255,.5);box-shadow:0 12px 34px -8px rgba(34,160,255,.8),0 0 0 0 rgba(34,228,255,.5);
+  opacity:0;transform:scale(.4) translateY(30px);pointer-events:none;transition:opacity .5s var(--ease),transform .6s cubic-bezier(.34,1.56,.64,1);animation:cbpulse 2.6s infinite}
+.cb-launch.on{opacity:1;transform:none;pointer-events:auto}
+.cb-launch:hover{transform:scale(1.08)}
+.cb-launch svg{width:42px;height:42px}
+.cb-launch .cb-e{transform-box:fill-box;transform-origin:center;animation:cbblink 4s infinite}
+@keyframes cbblink{0%,92%,100%{transform:none}95%{transform:scaleY(.15)}}
+@keyframes cbpulse{0%{box-shadow:0 12px 34px -8px rgba(34,160,255,.8),0 0 0 0 rgba(34,228,255,.45)}70%{box-shadow:0 12px 34px -8px rgba(34,160,255,.8),0 0 0 16px rgba(34,228,255,0)}100%{box-shadow:0 12px 34px -8px rgba(34,160,255,.8),0 0 0 0 rgba(34,228,255,0)}}
+.cb-badge{position:absolute;top:-2px;right:-2px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#ff4d7d;color:#fff;font:700 11px/20px var(--body);text-align:center;box-shadow:0 0 0 3px #03050b}
+.cb-badge[hidden]{display:none}
+.cb-panel{position:fixed;right:22px;bottom:100px;z-index:59;width:min(390px,calc(100vw - 24px));height:min(580px,calc(100vh - 130px));display:flex;flex-direction:column;
+  padding:0!important;overflow:hidden;overflow:clip;transform-origin:100% 100%;animation:cbIn .45s cubic-bezier(.34,1.4,.64,1) both}
+.cb-panel[hidden]{display:none}
+.cb-panel.closing{animation:cbOut .25s ease-in both}
+@keyframes cbIn{from{opacity:0;transform:scale(.6) translateY(30px)}to{opacity:1;transform:none}}
+@keyframes cbOut{to{opacity:0;transform:scale(.7) translateY(20px)}}
+.cb-head{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(34,228,255,.1),transparent)}
+.cb-ava{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#0a1838;border:1px solid var(--line2)}
+.cb-ava svg{width:32px;height:32px}
+.cb-head b{display:block;font:700 15px var(--head)}
+.cb-head small{font:12px var(--body);color:var(--muted);display:flex;align-items:center;gap:6px}
+.cb-head small i{width:7px;height:7px;border-radius:50%;background:#28c840;box-shadow:0 0 8px #28c840}
+.cb-x{margin-left:auto;width:32px;height:32px;border-radius:50%;color:var(--muted);border:1px solid var(--line)}
+.cb-x:hover{color:#fff;border-color:var(--cyan)}
+.cb-msgs{flex:1;min-height:0;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;overscroll-behavior:contain}
+.cb-msg{flex:none;max-width:86%;padding:10px 14px;border-radius:16px;font:14px/1.55 var(--body);animation:cbMsg .35s var(--ease) both;white-space:pre-line}
+@keyframes cbMsg{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+.cb-msg.from-bot{align-self:flex-start;background:rgba(14,28,60,.85);border:1px solid var(--line);border-bottom-left-radius:4px;color:#d7e4f7}
+.cb-msg.from-me{align-self:flex-end;background:linear-gradient(135deg,#2a6bff,#15b6e6);color:#fff;border-bottom-right-radius:4px}
+.cb-msg b{color:#fff}
+.cb-msg a{color:#7fdcff}
+.cb-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cb-acts button{padding:6px 11px;border-radius:999px;font:600 12px var(--body);color:#bfe9ff;border:1px solid rgba(34,228,255,.35);background:rgba(34,228,255,.08)}
+.cb-acts button:hover{background:rgba(34,228,255,.18);color:#fff}
+.cb-typing{flex:none;align-self:flex-start;display:flex;gap:4px;padding:12px 14px;border-radius:16px;background:rgba(14,28,60,.85);border:1px solid var(--line)}
+.cb-typing i{width:7px;height:7px;border-radius:50%;background:#7fdcff;animation:cbdot 1s infinite}
+.cb-typing i:nth-child(2){animation-delay:.15s}.cb-typing i:nth-child(3){animation-delay:.3s}
+@keyframes cbdot{0%,60%,100%{transform:none;opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+.cb-quick{display:flex;gap:6px;overflow-x:auto;padding:8px 14px;border-top:1px solid var(--line);scrollbar-width:none}
+.cb-quick::-webkit-scrollbar{display:none}
+.cb-quick button{flex:none;padding:7px 12px;border-radius:999px;font:500 12px var(--body);color:#cfe0f7;border:1px solid var(--line2);background:rgba(3,6,14,.5);white-space:nowrap}
+.cb-quick button:hover{border-color:var(--cyan);color:#fff}
+.cb-input{display:flex;gap:8px;padding:12px 14px 14px}
+.cb-input input{flex:1;min-width:0;padding:12px 16px;border-radius:999px;border:1px solid var(--line2);background:rgba(3,6,14,.65);color:var(--white);font:14px var(--body)}
+.cb-input input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,228,255,.12)}
+.cb-input button{width:44px;height:44px;flex:none;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#2a6bff,#19d0f0);color:#fff}
+.cb-input button svg{width:18px;height:18px}
+@media (max-width:520px){.cb-panel{right:8px;left:8px;width:auto;bottom:86px;height:calc(100vh - 110px)}.cb-launch{right:14px;bottom:14px}}
+
 /* ---------- reduced motion ---------- */
 body.calm *,body.calm *:before,body.calm *:after{animation-duration:.001s!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.001s!important;transition-delay:0s!important}
 body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .hero .fade,body.calm h1 .ch,body.calm .chip{clip-path:none!important;opacity:1!important;transform:none!important;filter:none!important}
@@ -1000,6 +1051,28 @@ body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .
   <div class="sheet glass glow"><div class="prose" id="viewBody"></div></div>
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
+
+<!-- chatbot -->
+<button class="cb-launch" id="cbLaunch" type="button" aria-label="Chat with Harsh's DevOps bot" aria-expanded="false" aria-controls="cbPanel">
+  <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="12" width="48" height="38" rx="18" fill="#eef3fa"/><rect x="14" y="18" width="36" height="26" rx="12" fill="#06102a"/>
+    <rect class="cb-e" x="22" y="24" width="6" height="12" rx="3" fill="#5ff3ff"/><rect class="cb-e" x="36" y="24" width="6" height="12" rx="3" fill="#5ff3ff"/>
+    <line x1="32" y1="12" x2="32" y2="5" stroke="#9eabc0" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="5" r="3.5" fill="#22e4ff"/></svg>
+  <span class="cb-badge" id="cbBadge">1</span>
+</button>
+<section class="cb-panel glass glow" id="cbPanel" role="dialog" aria-modal="false" aria-labelledby="cbTitle" hidden>
+  <header class="cb-head">
+    <span class="cb-ava" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="38" rx="18" fill="#eef3fa"/><rect x="14" y="18" width="36" height="26" rx="12" fill="#06102a"/><rect x="22" y="24" width="6" height="12" rx="3" fill="#5ff3ff"/><rect x="36" y="24" width="6" height="12" rx="3" fill="#5ff3ff"/></svg></span>
+    <div><b id="cbTitle">Harsh's DevOps Bot</b><small><i></i>Online · replies instantly</small></div>
+    <button class="cb-x" id="cbClose" type="button" aria-label="Close chat">✕</button>
+  </header>
+  <div class="cb-msgs" id="cbMsgs" aria-live="polite"></div>
+  <div class="cb-quick" id="cbQuick"></div>
+  <form class="cb-input" id="cbForm" autocomplete="off">
+    <label class="sr" for="cbText">Type your question</label>
+    <input id="cbText" maxlength="300" placeholder="Ask about skills, projects, experience…">
+    <button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12l16-8-6 16-2-7-8-1z"/></svg></button>
+  </form>
+</section>
 <div id="flash" aria-hidden="true"></div><div class="cring" id="cring" aria-hidden="true"></div><div class="cdot" id="cdot" aria-hidden="true"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1839,12 +1912,12 @@ function initAvatar(){
  (function blink(){setTimeout(()=>{if(!calm()&&!bot.classList.contains('happy')&&document.querySelector('.hero.revealed')){bot.classList.add('blink');setTimeout(()=>bot.classList.remove('blink'),120);
    if(Math.random()<.3)setTimeout(()=>{bot.classList.add('blink');setTimeout(()=>bot.classList.remove('blink'),110);},240);}blink();},2000+Math.random()*3200);})();
  // wave + happy face + speech bubble
- const lines=["Hi! I'm Harsh's DevOps bot 👋","Let's build something on AWS ☁️","terraform plan before apply 😄","Hiring for DevOps? Talk to Harsh!","Containers, clusters, coffee ☕"];let li=0,busy=false;
+ const lines=["Hi! I'm Harsh's DevOps bot 👋","Click me to chat 💬","Let's build something on AWS ☁️","terraform plan before apply 😄","Hiring for DevOps? Talk to Harsh!","Containers, clusters, coffee ☕"];let li=0,busy=false;
  function hello(msg){if(busy)return;busy=true;
   bot.classList.remove('waving');bot.getBoundingClientRect();bot.classList.add('waving','happy');
   bubble.textContent=msg||lines[(li=(li+1)%lines.length)];bubble.classList.add('show');
   setTimeout(()=>{bot.classList.remove('waving','happy');busy=false;},2300);clearTimeout(hello.t);hello.t=setTimeout(()=>bubble.classList.remove('show'),3200);}
- av.addEventListener('pointerenter',()=>hello());av.addEventListener('click',()=>hello());
+ av.addEventListener('pointerenter',()=>hello());av.addEventListener('click',()=>{hello('Let\'s chat! 💬');CB.open();});
  av.hello=()=>hello(lines[0]);
  // idle: a happy glance every so often
  setInterval(()=>{if(!busy&&!calm()&&document.querySelector('.hero.revealed')&&Math.random()<.5){bot.classList.add('happy');setTimeout(()=>bot.classList.remove('happy'),900);}},9000);
@@ -1856,6 +1929,71 @@ function initAvatar(){
    else setTimeout(()=>{outEl.textContent=o;setTimeout(runCmd,2200);},350);})();})();
 }
 
+
+/* =====================================================================
+   CHATBOT (rule-based, answers from the site's own data)
+   ===================================================================== */
+const CB=(()=>{
+ const norm=t=>' '+t.toLowerCase().replace(/[^a-z0-9+#.\s]/g,' ').replace(/\s+/g,' ').trim()+' ';
+ const has=(t,words)=>words.reduce((n,w)=>n+(t.includes(' '+w+' ')||(w.length>4&&t.includes(w))?1:0),0);
+ const allSkills=SKILLS.flatMap(c=>c.items.map(([n,d])=>({n,d,cat:c.name})));
+ const aliases={'k8s':'Kubernetes','eks':'Kubernetes','tf':'Terraform','iac':'Infrastructure as Code','ec2':'Amazon EC2','s3':'Amazon S3','iam':'AWS IAM','vpc':'Amazon VPC','cloudwatch':'Amazon CloudWatch',
+  'intune':'Microsoft Intune','entra':'Microsoft Entra ID','azure':'Microsoft Azure','m365':'Exchange Online','mfa':'Multi-Factor Authentication','rbac':'Role-Based Access Control','ci cd':'CI/CD Practices','cicd':'CI/CD Practices','pipeline':'CI/CD Practices','mysql':'MySQL','mongo':'MongoDB','powershell':'PowerShell','linux':'Linux','docker':'Docker','kubernetes':'Kubernetes','terraform':'Terraform','ansible':'Ansible','git':'Git','github':'GitHub'};
+ const A=(label,fn)=>({label,fn});
+ const goTo=id=>A(({projects:'Open projects',experience:'View experience',certifications:'See certifications',contact:'Contact form',blog:'Read the blog',skills:'Explore skills',education:'Education'})[id],()=>{go(id);if(innerWidth<620)close();});
+ const intents=[
+  {k:['hi','hello','hey','hii','hiii','namaste','hola','yo','sup','good morning','good evening'],a:()=>({t:"Hey! 👋 I'm Harsh's DevOps bot. Ask me anything about his skills, experience, projects, certifications or how to reach him."})},
+  {k:['who','about','introduce','tell me about','kaun','kon','harsh','yourself','summary','profile','background'],a:()=>({t:`<b>Harsh Yadav</b> is an AWS Cloud & DevOps Engineer in Gurugram, India. ☁️\n\nHe currently works as an <b>AWS Cloud Engineer at Cache Digitech</b>, managing AWS infrastructure with Terraform, and before that was a <b>Cloud Engineer (M365 & Azure) at Meridian</b>. He holds a B.Tech in CSE from GLA University (CGPA 8.21).`,acts:[goTo('experience'),goTo('projects')]})},
+  {k:['skill','skills','tech','stack','tools','technologies','know','expert','good at','aata','kya aata'],a:()=>({t:SKILLS.map(c=>`<b>${c.name}:</b> ${c.items.map(i=>i[0]).join(', ')}`).join('\n\n'),acts:[goTo('skills')]})},
+  {k:['experience','work','job','jobs','company','companies','current','working','career','role','cache','digitech','meridian','years','kaha kaam','naukri'],a:()=>({t:EXPERIENCE.map(e=>`<b>${e.role}</b> · ${e.company}\n${e.dates} · ${e.loc}`).join('\n\n')+`\n\nThat's 1+ year across AWS infrastructure and Microsoft cloud.`,acts:[goTo('experience')]})},
+  {k:['project','projects','built','build','portfolio','work samples','generatelogic','generate logic','website','github','repo','code'],a:()=>({t:PROJECTS.map(p=>`<b>${p.title}</b>\n${p.summary}`).join('\n\n'),acts:[goTo('projects'),A('Visit generatelogic.in ↗',()=>window.open('https://generatelogic.in','_blank','noopener'))]})},
+  {k:['cert','certs','certification','certifications','certified','exam','credential','badge'],a:()=>({t:'Harsh\'s certifications:\n'+CERTS.map(c=>`• ${c.name}`).join('\n'),acts:[goTo('certifications')]})},
+  {k:['education','college','degree','university','cgpa','gla','btech','b.tech','school','study','studied','padhai','marks'],a:()=>({t:`🎓 <b>B.Tech, Computer Science & Engineering</b>\nGLA University, Mathura · Aug 2022 – May 2026 · CGPA 8.21\n\n🏫 <b>Ivey International School</b>, Firozabad\nIntermediate 80.4% · High School 87.8%`,acts:[goTo('education')]})},
+  {k:['contact','email','mail','reach','hire','hiring','linkedin','connect','available','opportunity','opportunities','freelance','collab','collaborate','interview','call','phone','number','baat'],a:()=>({t:`You can reach Harsh at:\n📧 <b>${CONFIG.email}</b>\n💼 linkedin.com/in/harshyadav579\n\nFor hiring or collaboration, the contact form below goes straight to his inbox.`,acts:[A('Copy email',()=>copy(CONFIG.email,'Email copied')),A('LinkedIn ↗',()=>window.open(CONFIG.linkedin,'_blank','noopener')),goTo('contact')]})},
+  {k:['resume','cv','biodata'],a:()=>({t:'Here is Harsh\'s resume 📄',acts:[A('Open resume',()=>{location.hash='resume';})]})},
+  {k:['where','location','based','city','live','relocate','relocation','remote','gurgaon','gurugram','kaha'],a:()=>({t:`Harsh is based in <b>Gurugram, Haryana, India</b> 📍\nFor questions about relocation or remote work, it's best to ask him directly.`,acts:[goTo('contact')]})},
+  {k:['blog','article','articles','tutorial','tutorials','learn','guide','post','posts'],a:()=>({t:'The blog has hands-on tutorials:\n'+POSTS.map(p=>`• ${p.title}`).join('\n'),acts:[goTo('blog')]})},
+  {k:['youtube','channel','video','videos'],a:()=>({t:'Harsh runs the <b>Generate Logic</b> YouTube channel with Cloud & DevOps tutorials 🎥',acts:[A('Open channel ↗',()=>window.open('https://www.youtube.com/@GENERATELOGIC','_blank','noopener'))]})},
+  {k:['thanks','thank','thx','ty','shukriya','dhanyawad','great','awesome','nice','cool'],a:()=>({t:"Happy to help! 😊 Anything else you'd like to know?"})},
+  {k:['bye','goodbye','see you','cya','alvida'],a:()=>({t:'Bye! 👋 Thanks for visiting Harsh\'s portfolio.'})},
+  {k:['bot','robot','are you','ai','human','real'],a:()=>({t:"I'm a small rule-based bot that knows everything on this portfolio 🤖 For anything more, Harsh is one email away."})}
+ ];
+ function answer(q){
+  const t=norm(q);
+  // a specific technology?
+  for(const [al,name] of Object.entries(aliases)){if(t.includes(' '+al+' ')){const sk=allSkills.find(x=>x.n===name);
+   if(sk)return {t:`Yes! <b>${sk.n}</b> is part of Harsh's ${sk.cat} skills.\n${sk.d}`,acts:[goTo('skills'),goTo('projects')]};}}
+  const sk=allSkills.find(x=>t.includes(' '+x.n.toLowerCase()+' '));
+  if(sk)return {t:`Yes! <b>${sk.n}</b> is part of Harsh's ${sk.cat} skills.\n${sk.d}`,acts:[goTo('skills')]};
+  let best=null,score=0;intents.forEach(it=>{const sc=has(t,it.k);if(sc>score){score=sc;best=it;}});
+  if(best)return best.a();
+  return {t:"Hmm, I'm a simple bot and didn't catch that 🤔 Try one of the quick questions below, or ask Harsh directly.",acts:[goTo('contact')]};
+ }
+ const QUICK=['👋 Who is Harsh?','🛠 Skills','💼 Experience','🚀 Projects','🏅 Certifications','🎓 Education','📄 Resume','📧 Contact'];
+ let panel,msgs,input,opened=false,greeted=false;
+ function addMsg(html,who,acts){const m=document.createElement('div');m.className='cb-msg '+who;m.innerHTML=html;
+  if(acts&&acts.length){const w=document.createElement('div');w.className='cb-acts';acts.forEach(a=>{const b=document.createElement('button');b.type='button';b.textContent=a.label;b.onclick=a.fn;w.appendChild(b);});m.appendChild(w);}
+  msgs.appendChild(m);msgs.scrollTop=msgs.scrollHeight;}
+ function botSay(r){const ty=document.createElement('div');ty.className='cb-typing';ty.innerHTML='<i></i><i></i><i></i>';msgs.appendChild(ty);msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(()=>{ty.remove();addMsg(r.t,'from-bot',r.acts);},calm()?0:Math.min(1400,500+r.t.length*3));}
+ function ask(q){q=q.trim();if(!q)return;addMsg(esc(q),'from-me');botSay(answer(q));}
+ function open(){if(opened)return;opened=true;panel.hidden=false;panel.classList.remove('closing');$('#cbLaunch').setAttribute('aria-expanded','true');$('#cbBadge').hidden=true;
+  if(!greeted){greeted=true;botSay({t:"Hi! 👋 I'm Harsh's DevOps bot.\nAsk me about his skills, experience, projects, certifications, or how to hire him."});}
+  if(matchMedia('(pointer:fine)').matches)setTimeout(()=>input.focus(),300);}
+ function close(){if(!opened)return;opened=false;panel.classList.add('closing');$('#cbLaunch').setAttribute('aria-expanded','false');setTimeout(()=>{if(!opened)panel.hidden=true;},240);}
+ function init(){panel=$('#cbPanel');msgs=$('#cbMsgs');input=$('#cbText');
+  $('#cbQuick').innerHTML=QUICK.map(q=>`<button type="button">${q}</button>`).join('');
+  $('#cbQuick').onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent.replace(/^\S+\s/,''));};
+  $('#cbForm').onsubmit=e=>{e.preventDefault();ask(input.value);input.value='';};
+  $('#cbLaunch').onclick=()=>opened?close():open();$('#cbClose').onclick=close;
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&opened)close();});
+  // launcher appears once the intro is done
+  const show=()=>$('#cbLaunch').classList.add('on');
+  const iv=setInterval(()=>{if(document.querySelector('.hero.revealed')){clearInterval(iv);setTimeout(show,3500);}},300);
+ }
+ return {init,open,close,ask};
+})();
+
 /* =====================================================================
    WIRING
    ===================================================================== */
@@ -1864,7 +2002,7 @@ function init(){
  $$('[data-split]').forEach(el=>{let i=el.classList.contains('b')?5:0;el.innerHTML=[...el.textContent].map(c=>`<span class="ch" aria-hidden="true" style="--i:${i++}">${c}</span>`).join('');});
  SECTIONS.slice(1).forEach(([id],i)=>document.getElementById(id).dataset.n='0'+(i+1));
  renderNav();renderStats();renderSkills();renderTimeline();renderProjects();renderCerts();renderBlog();
- animPack();initAvatar();
+ animPack();initAvatar();CB.init();
  $('#emailTxt').textContent=CONFIG.email;$('#liLink').href=CONFIG.linkedin;$('#yr').textContent=new Date().getFullYear();
  if(CONFIG.resumeUrl){const b=$('#resumeBtn');b.href=CONFIG.resumeUrl;b.setAttribute('download','');}
 
