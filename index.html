@@ -1989,7 +1989,7 @@ const CB=(()=>{
   const local=answer(q);
   if(!AI||aiOff||Date.now()<aiPauseUntil){botSay(local);return;}
   pending=true;history.push({role:'user',text:q});const ty=typing();
-  try{const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),10000);
+  try{const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),25000);
    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history}),signal:ctl.signal});clearTimeout(tm);
    const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||String(r.status));
    history.push({role:'model',text:d.text});history=history.slice(-10);

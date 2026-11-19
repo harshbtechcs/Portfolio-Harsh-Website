@@ -50,7 +50,7 @@ async function callGemini(model, key, contents, withThinking) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({ systemInstruction: { parts: [{ text: SYSTEM }] }, contents, generationConfig }),
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(12000),
     }
   );
   const data = await res.json().catch(() => ({}));
@@ -85,30 +85,35 @@ module.exports = async (req, res) => {
   // Try the configured model first, then fall back through stable aliases if a name isn't available.
   // Lite first: lighter load on Google's side, plenty for portfolio Q&A, and the most generous free limits.
   const models = [...new Set([process.env.GEMINI_MODEL, 'gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-2.5-flash'].filter(Boolean))];
-  try {
-    let r = null;
-    for (const model of models) {
+  const tried = [];
+  let r = null;
+  for (const model of models) {
+    try {
       r = await callGemini(model, key, contents, true);
       if (r.status === 400 && !isKeyProblem(r.data)) r = await callGemini(model, key, contents, false); // no thinkingConfig
-      if (r.status === 404) { console.error('gemini model not found:', model); continue; }
-      if (r.status === 200) break;
-      // Busy/overloaded (503, 500, 504) or out of quota (429): another model usually still works.
-      if (![429, 500, 503, 504].includes(r.status)) break; // key/permission problems won't be fixed by another model
-      console.error('gemini', r.status, 'on', model, '- trying next model');
+    } catch (err) {
+      // timeout or network error on this model: note it and try the next one
+      tried.push({ model, error: (err && (err.name || err.message)) || 'error' });
+      console.error('gemini call failed on', model, err && err.message);
+      r = null;
+      continue;
     }
-    if (r.status !== 200) {
-      const reason = ((r.data || {}).error || {}).status || '';
-      console.error('gemini error', r.status, JSON.stringify(r.data).slice(0, 400));
-      return res.status(503).json({ ok: false, error: r.status === 429 ? 'ai quota reached' : 'ai unavailable', code: r.status, reason });
-    }
-    const parts = (((r.data.candidates || [])[0] || {}).content || {}).parts || [];
-    const text = parts.filter((p) => p.text && !p.thought).map((p) => p.text).join('').trim();
-    if (!text) return res.status(503).json({ ok: false, error: 'empty answer' });
-    return res.status(200).json({ ok: true, text: text.slice(0, 2500) });
-  } catch (err) {
-    console.error('gemini call failed:', err && err.message);
-    return res.status(503).json({ ok: false, error: 'ai unavailable' });
+    const reason = ((r.data || {}).error || {}).status || '';
+    tried.push({ model, code: r.status, reason });
+    if (r.status === 200) break;
+    if (![404, 429, 500, 503, 504].includes(r.status)) break; // key/permission problems won't be fixed by another model
+    console.error('gemini', r.status, reason, 'on', model, '- trying next model');
   }
+
+  if (!r || r.status !== 200) {
+    const last = tried[tried.length - 1] || {};
+    console.error('gemini failed:', JSON.stringify(tried), r ? JSON.stringify(r.data).slice(0, 400) : '');
+    return res.status(503).json({ ok: false, error: last.code === 429 ? 'ai quota reached' : 'ai unavailable', tried });
+  }
+  const parts = (((r.data.candidates || [])[0] || {}).content || {}).parts || [];
+  const text = parts.filter((p) => p.text && !p.thought).map((p) => p.text).join('').trim();
+  if (!text) return res.status(503).json({ ok: false, error: 'empty answer', tried });
+  return res.status(200).json({ ok: true, text: text.slice(0, 2500) });
 };
 
 function isKeyProblem(data) {
