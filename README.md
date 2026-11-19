@@ -4,7 +4,7 @@ Personal portfolio of **Harsh Yadav, AWS Cloud & DevOps Engineer** · live at **
 
 - Immersive 3D background (Three.js): cloud network, per-skill environments, globe
 - Sections: About, Skills, Experience, Projects, Certifications, Education, Blog, Contact
-- Welcome gate + contact form → email alerts via a Vercel serverless function (`/api/notify`)
+- Welcome gate + contact form → email alert to Harsh + branded thank-you email to the visitor, via a Vercel serverless function (`/api/notify`)
 - Single-file front end (`index.html`), no build step
 
 ## Structure
@@ -23,6 +23,8 @@ robots.txt, sitemap.xml
    | `GMAIL_USER` | your Gmail address |
    | `GMAIL_APP_PASSWORD` | 16-char Google App Password (myaccount.google.com → Security → 2-Step Verification → App passwords) |
    | `NOTIFY_TO` | optional, where alerts go (defaults to `GMAIL_USER`) |
+   | `AUTO_REPLY` | optional, `off` stops the thank-you email to visitors (default on) |
+   | `SITE_URL` | optional, portfolio link used in the thank-you email (default `https://harsh.generatelogic.in`) |
    Then **Deployments → ⋯ → Redeploy** so the function picks them up.
 3. **Settings → Domains** → add `harsh.generatelogic.in` → add the CNAME record Vercel shows at your DNS provider. SSL is issued automatically.
 
