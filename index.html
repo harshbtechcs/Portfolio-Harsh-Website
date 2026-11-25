@@ -1118,7 +1118,7 @@ body.calm .reveal,body.calm .glass.reveal,body.calm .sec-head h2 .wi,body.calm .
     <div class="sec-head reveal">
       <div class="idx">04 / Projects</div>
       <h2 id="proj-h">Engineering, <em>in practice</em>.</h2>
-      <p>My own website, plus hands-on builds across AWS infrastructure and Microsoft cloud identity. Open a project for its architecture and details.</p>
+      <p>My own website, plus hands-on builds across Keycloak SSO, AWS infrastructure and Microsoft cloud identity. Open a project for its architecture and details.</p>
     </div>
     <div class="proj-grid" id="projGrid"></div>
   </section>
@@ -1357,6 +1357,15 @@ const PROJECTS = [
   lessons:['Running database migrations at deploy time rather than inside the image build keeps the Docker image reusable across environments.','Placing serverless functions in the same region as the database (sin1 next to Neon) is the simplest latency win.','Security is mostly defaults done right: server-only API keys, ownership checks on every query, rate limits and signed cookies.'],
   roadmap:'Next on the roadmap: PDF notes on S3, a command library and quizzes, then moving to AWS with Terraform, CI/CD and monitoring.',
   screenshots:[], github:'https://github.com/harshbtechcs/generate-logic', youtube:'https://www.youtube.com/@GENERATELOGIC', demo:'https://generatelogic.in'},
+ {id:'keycloak-sso',title:'Keycloak SSO on AWS Lightsail',year:'2026',arch:'keycloak',
+  tech:['Keycloak','SSO','AWS Lightsail','Docker','Ubuntu 24','Linux CLI'],
+  summary:'Keycloak identity provider running in Docker on AWS Lightsail, tested as Single Sign-On for customers\' AWS accounts, with Azure and GCP accounts to follow.',
+  overview:'This project implements Keycloak as a Single Sign-On (SSO) identity provider for customers\' AWS accounts, with Azure and GCP accounts to follow. Keycloak runs in a Docker container on an Ubuntu 24 AWS Lightsail instance, set up entirely from the command line. The Lightsail setup has been tested, and a detailed plan of action is ready for the production rollout.',
+  objectives:['Give customers one central sign-in for their AWS accounts through Keycloak.','Prove the setup first on a small, low-cost AWS Lightsail instance before production.','Do the whole build from the CLI so it is repeatable, not a series of console clicks.','Extend the same SSO approach to Azure and GCP accounts afterwards.'],
+  implementation:['Created an Ubuntu 24 AWS Lightsail instance and installed Docker on it.','Ran Keycloak in a Docker container, with the full setup done from the command line instead of the web console.','Tested the Keycloak setup on Lightsail as the SSO provider for AWS accounts.','Prepared a detailed plan of action for the production implementation, with the Keycloak database on the same EC2 instance as the lowest-cost option.','Prepared the deployment to run under its own custom domain.'],
+  lessons:[],
+  roadmap:'Next: roll Keycloak out to production on EC2 under a custom domain, then add SSO for Azure and GCP accounts.',
+  screenshots:[], github:'', demo:''},
  {id:'aws-infra',title:'AWS Cloud Infrastructure Deployment',year:'2026',arch:'aws',
   tech:['AWS','EC2','VPC','IAM','Security Groups','Linux','SSH'],
   summary:'Provisioning and managing AWS cloud infrastructure with secure networking and remote server administration.',
@@ -1602,6 +1611,18 @@ function archSVG(kind){
   <path class="flow" d="M330 130 H392"/><path class="flow b" d="M330 186 C360 186 360 186 392 186"/>
   <path class="flow b" d="M330 196 C360 210 360 246 392 246"/>
   <circle class="pulse" cx="318" cy="114" r="3"/></svg>`;
+ if(kind==='keycloak') return `<svg class="arch" viewBox="0 0 600 280" role="img" aria-label="Keycloak SSO architecture: users sign in through Keycloak running in a Docker container on an AWS Lightsail Ubuntu instance, which grants access to customer AWS accounts, with Azure and GCP accounts next">
+  <rect class="zone" x="170" y="22" width="238" height="236" rx="16"/><text x="186" y="44">AWS Lightsail · Ubuntu 24</text>
+  <rect class="zone2" x="190" y="62" width="198" height="176" rx="12"/><text class="t2" x="204" y="82">Docker</text>
+  <rect class="nd" x="208" y="104" width="162" height="64" rx="10"/><text x="244" y="132">Keycloak</text><text class="t2" x="250" y="152">SSO provider</text>
+  <text class="t2" x="204" y="206">set up from the CLI</text>
+  <rect class="nd" x="20" y="116" width="92" height="52" rx="10"/><text x="40" y="139">Users</text><text class="t2" x="40" y="156">sign in</text>
+  <rect class="nd" x="460" y="46" width="120" height="52" rx="10"/><text x="480" y="69">AWS accounts</text><text class="t2" x="480" y="86">customers</text>
+  <rect class="zone2" x="460" y="132" width="120" height="44" rx="10"/><text class="t2" x="486" y="158">Azure · next</text>
+  <rect class="zone2" x="460" y="190" width="120" height="44" rx="10"/><text class="t2" x="490" y="216">GCP · next</text>
+  <path class="flow" d="M112 142 H208"/><path class="flow b" d="M370 126 C420 126 420 72 460 72"/>
+  <path class="flow b" style="opacity:.4" d="M370 140 C420 140 420 154 460 154"/><path class="flow b" style="opacity:.4" d="M370 154 C420 154 420 212 460 212"/>
+  <circle class="pulse" cx="208" cy="142" r="3"/></svg>`;
  if(kind==='web') return `<svg class="arch" viewBox="0 0 600 280" role="img" aria-label="Website flow: a visitor looks up generatelogic.in in DNS, then the hosting server delivers the website">
   <rect class="nd" x="24" y="116" width="100" height="52" rx="10"/><text x="44" y="140">Visitor</text><text class="t2" x="44" y="157">browser</text>
   <rect class="nd" x="176" y="38" width="120" height="48" rx="10"/><text x="196" y="60">DNS</text><text class="t2" x="196" y="76">domain lookup</text>
@@ -2149,7 +2170,7 @@ const CB=(()=>{
   {k:['who','about','introduce','tell me about','kaun','kon','harsh','yourself','summary','profile','background'],a:()=>({t:`<b>Harsh Yadav</b> is an AWS Cloud & DevOps Engineer in Gurugram, India. ☁️\n\nHe has <b>${totalExp()}</b> of experience. He currently works as an <b>AWS Cloud Engineer at Cache Digitech</b>, managing AWS infrastructure with Terraform, and before that was a <b>Cloud Engineer (M365 & Azure) at Meridian</b>. He holds a B.Tech in CSE from GLA University (CGPA 8.21).`,acts:[goTo('experience'),goTo('projects')]})},
   {k:['skill','skills','tech','stack','tools','technologies','know','expert','good at','aata','kya aata'],a:()=>({t:SKILLS.map(c=>`<b>${c.name}:</b> ${c.items.map(i=>i[0]).join(', ')}`).join('\n\n'),acts:[goTo('skills')]})},
   {k:['experience','years','year','how long','kitna experience','total experience','work','job','jobs','company','companies','current','working','career','role','cache','digitech','meridian','years','kaha kaam','naukri'],a:()=>({t:EXPERIENCE.map(e=>`<b>${e.role}</b> · ${e.company}\n${e.dates} (${fmtDur(monthsIn(e))}) · ${e.loc}`).join('\n\n')+`\n\nThat's <b>${totalExp()}</b> of experience in total, across AWS infrastructure and Microsoft cloud.`,acts:[goTo('experience')]})},
-  {k:['project','projects','built','build','portfolio','work samples','generatelogic','generate logic','website','github','repo','code'],a:()=>({t:PROJECTS.map(p=>`<b>${p.title}</b>\n${p.summary}`).join('\n\n'),acts:[goTo('projects'),A('Visit generatelogic.in ↗',()=>window.open('https://generatelogic.in','_blank','noopener'))]})},
+  {k:['project','projects','keycloak','sso','built','build','portfolio','work samples','generatelogic','generate logic','website','github','repo','code'],a:()=>({t:PROJECTS.map(p=>`<b>${p.title}</b>\n${p.summary}`).join('\n\n'),acts:[goTo('projects'),A('Visit generatelogic.in ↗',()=>window.open('https://generatelogic.in','_blank','noopener'))]})},
   {k:['cert','certs','certification','certifications','certified','exam','credential','badge'],a:()=>({t:'Harsh\'s certifications:\n'+CERTS.map(c=>`• ${c.name}`).join('\n'),acts:[goTo('certifications')]})},
   {k:['education','college','degree','university','cgpa','gla','btech','b.tech','school','study','studied','padhai','marks'],a:()=>({t:`🎓 <b>B.Tech, Computer Science & Engineering</b>\nGLA University, Mathura · Aug 2022 – May 2026 · CGPA 8.21\n\n🏫 <b>Ivey International School</b>, Firozabad\nIntermediate 80.4% · High School 87.8%`,acts:[goTo('education')]})},
   {k:['contact','email','mail','reach','hire','hiring','linkedin','connect','available','opportunity','opportunities','freelance','collab','collaborate','interview','call','phone','number','baat'],a:()=>({t:`You can reach Harsh at:\n📧 <b>${CONFIG.email}</b>\n💼 linkedin.com/in/harshyadav579\n\nFor hiring or collaboration, the contact form below goes straight to his inbox.`,acts:[A('Copy email',()=>copy(CONFIG.email,'Email copied')),A('LinkedIn ↗',()=>window.open(CONFIG.linkedin,'_blank','noopener')),goTo('contact')]})},
